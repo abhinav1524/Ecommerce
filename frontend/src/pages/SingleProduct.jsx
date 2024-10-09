@@ -42,10 +42,6 @@ const SingleProduct = () => {
             </div>
             </div>
             <div>
-            <div class="flex justify-between items-center mb-4">
-                <a href="#" class="text-gray-500 hover:text-gray-800">&larr; Prev Product</a>
-                <a href="#" class="text-gray-500 hover:text-gray-800">Next Product &rarr;</a>
-            </div>
             <h1 class="text-2xl font-semibold">Samsung 27-inches 68.46cm 2560 X 1440 (WQHD) Pixels Odyssey G5 Gaming, Ultra WQHD, 144 Hz, 1ms, 1000R Curved Monitor, QLED, AMD FreeSync Premium LC27G55TQWWXXL, Black</h1>
             <p class="text-sm text-gray-600">SKU: 1234567 &middot; BRAND:Samsung</p>
             <div class="flex items-center space-x-2 my-3">
@@ -83,8 +79,7 @@ const SingleProduct = () => {
                 <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full flex items-center">
                 <i class="fas fa-shopping-cart mr-2"></i> ADD TO CART
                 </button>
-                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-full">ADD TO WISH</button>
-                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-full">COMPARE THIS</button>
+                {/* <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-full">ADD TO WISH</button> */}
             </div>
             </div>
         </div>
