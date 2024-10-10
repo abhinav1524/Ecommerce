@@ -118,7 +118,7 @@ const AddToCart = () => {
               Continue Shopping
             </a>
           </div>
-          <div id="summary" class="w-full sm:w-1/4 bg-gray-100 px-6 py-10 mb-2 mr-2">
+          <div id="summary" class="w-full h-full max-h-100 sm:w-1/4 bg-gray-100 px-6 py-12 mb-2 mr-2">
             <h1 class="font-semibold text-xl sm:text-2xl border-b pb-8 pt-4">
               Order Summary
             </h1>
@@ -126,15 +126,15 @@ const AddToCart = () => {
               <span class="font-semibold text-sm uppercase">Items 3</span>
               <span class="font-semibold text-sm">$590</span>
             </div>
-            <div>
+            {/* <div>
               <label class="font-medium inline-block mb-3 text-sm uppercase">
                 Shipping
               </label>
               <select class="block p-2 text-gray-600 w-full text-sm">
                 <option>Standard shipping - $10.00</option>
               </select>
-            </div>
-            <div class="py-10">
+            </div> */}
+            {/* <div class="py-10">
               <label class="font-semibold inline-block mb-3 text-sm uppercase">
                 Promo Code
               </label>
@@ -146,7 +146,7 @@ const AddToCart = () => {
             </div>
             <button class="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase w-full">
               Apply
-            </button>
+            </button> */}
             <div class="border-t mt-8">
               <div class="flex font-semibold justify-between py-6 text-sm uppercase">
                 <span>Total cost</span>

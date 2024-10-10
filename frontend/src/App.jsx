@@ -9,6 +9,7 @@ import About from './pages/About'
 import Shoping from './pages/Shoping'
 import SingleProduct from './pages/SingleProduct'
 import AddToCart from './pages/AddToCart'
+import CheckOut from './pages/CheckOut'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -21,7 +22,8 @@ function App() {
     {/* <SignUp/> */}
     {/* <Shoping/> */}
     {/* <SingleProduct/> */}
-    <AddToCart/>
+    {/* <AddToCart/> */}
+    <CheckOut/>
      <Footer/>
     </>
   )
