@@ -10,20 +10,22 @@ import Shoping from './pages/Shoping'
 import SingleProduct from './pages/SingleProduct'
 import AddToCart from './pages/AddToCart'
 import CheckOut from './pages/CheckOut'
+import OrderPlacedMessage from './pages/OrderPlacedMessage'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
     <Header/>
-    {/* <Index/> */}
+    <Index/>
     {/* <Contact/> */}
     {/* <About/> */}
     {/* <SignUp/> */}
     {/* <Shoping/> */}
     {/* <SingleProduct/> */}
     {/* <AddToCart/> */}
-    <CheckOut/>
+    {/* <CheckOut/> */}
+    {/* <OrderPlacedMessage/> */}
      <Footer/>
     </>
   )
