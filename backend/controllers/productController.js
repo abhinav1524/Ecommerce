@@ -1,4 +1,5 @@
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 const Product =require("../models/product");
 
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
 
 // Create upload middleware
 const upload = multer({ storage }).array('images', 6);
-
+exports.upload = upload;
 // read all the product
 exports.getAllProducts=async (req, res) => {
     try {
@@ -28,6 +29,8 @@ exports.getAllProducts=async (req, res) => {
 
 // create the product
 exports.createProduct =async (req, res) => {
+    // console.log('Request body:', req.body);
+    // console.log('Request files:', req.files); 
     try {
         const { name, description, price,brand, category, stock,images } = req.body;
 
@@ -76,7 +79,7 @@ exports.getProductDetials =async (req,res)=>{
     }
 }
 
-exports.updateProduct =async (req, res) => {
+exports.updateProduct = async (req, res) => {
     const { id } = req.params; // Get the product ID from the request parameters
 
     upload(req, res, async (err) => {
@@ -97,6 +100,22 @@ exports.updateProduct =async (req, res) => {
 
             // Handle image uploads
             if (req.files && req.files.length > 0) {
+                // Delete old image if it exists
+                if (product.images && product.images.length > 0) {
+                    const oldImages = product.images;
+                    oldImages.forEach((image) => {
+                        const filePath = path.join(__dirname, 'uploads', image); // Adjust the path as necessary
+                        fs.unlink(filePath, (err) => {
+                            if (err) {
+                                console.error(`Error deleting old image: ${image}`, err);
+                            } else {
+                                console.log(`Deleted old image: ${image}`);
+                            }
+                        });
+                    });
+                }
+
+                // Update the images array with new images
                 product.images = req.files.map(file => file.path); // Update the images array
             }
 
