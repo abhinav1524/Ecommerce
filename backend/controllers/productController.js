@@ -82,58 +82,55 @@ exports.getProductDetials =async (req,res)=>{
 exports.updateProduct = async (req, res) => {
     const { id } = req.params; // Get the product ID from the request parameters
 
-    upload(req, res, async (err) => {
-        if (err) {
-            return res.status(400).json({ message: 'Image upload failed', error: err });
+    try {
+        // console.log('Request body:', req.body);
+        // console.log('Request files:', req.files);
+
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
         }
 
-        try {
-            const product = await Product.findById(id);
-            if (!product) {
-                return res.status(404).json({ message: 'Product not found' });
-            }
+        // Validate fields
+        if (!req.body.name || !req.body.description || !req.body.price || !req.body.category || typeof req.body.stock === 'undefined') {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
 
-            // Validate fields
-            if (!req.body.name || !req.body.description || !req.body.price || !req.body.category || typeof req.body.stock === 'undefined') {
-                return res.status(400).json({ message: 'All fields are required' });
-            }
-
-            // Handle image uploads
-            if (req.files && req.files.length > 0) {
-                // Delete old image if it exists
-                if (product.images && product.images.length > 0) {
-                    const oldImages = product.images;
-                    oldImages.forEach((image) => {
-                        const filePath = path.join(__dirname, 'uploads', image); // Adjust the path as necessary
-                        fs.unlink(filePath, (err) => {
-                            if (err) {
-                                console.error(`Error deleting old image: ${image}`, err);
-                            } else {
-                                console.log(`Deleted old image: ${image}`);
-                            }
-                        });
+        // Handle image uploads
+        if (req.files && req.files.length > 0) {
+            // Delete old images if they exist
+            if (product.images && product.images.length > 0) {
+                const oldImages = product.images;
+                oldImages.forEach((image) => {
+                    const filePath = path.join(__dirname, '..', image); // Adjust the path as necessary
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error(`Error deleting old image: ${image}`, err);
+                        } else {
+                            console.log(`Deleted old image: ${image}`);
+                        }
                     });
-                }
-
-                // Update the images array with new images
-                product.images = req.files.map(file => file.path); // Update the images array
+                });
             }
 
-            // Update product fields
-            product.name = req.body.name || product.name;
-            product.description = req.body.description || product.description;
-            product.price = req.body.price || product.price;
-            product.brand = req.body.brand || product.brand;
-            product.category = req.body.category || product.category;
-            product.stock = req.body.stock || product.stock;
-
-            await product.save(); // Save the updated product
-            res.json(product); // Return the updated product
-        } catch (error) {
-            console.error('Error updating product:', error);
-            res.status(500).json({ message: 'Server error' });
+            // Update the images array with new images
+            product.images = req.files.map(file => file.path); // Update the images array
         }
-    });
+
+        // Update product fields
+        product.name = req.body.name;
+        product.description = req.body.description;
+        product.price = req.body.price;
+        product.brand = req.body.brand;
+        product.category = req.body.category;
+        product.stock = req.body.stock;
+
+        await product.save(); // Save the updated product
+        res.json({ message: 'Product updated successfully', product }); // Return the updated product
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 };
 
 exports.deleteProduct=async (req, res) => {
