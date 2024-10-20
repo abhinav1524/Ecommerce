@@ -6,6 +6,9 @@ const userSchema =new mongoose.Schema({
     address:{type:String},
     password:{type:String,required:true},
     role:{type:String,enum:['customer','admin'],default:'customer'},
+    isBlocked: { type: Boolean, default: false },
     createdAt:{type:Date,default:Date.now},
 });
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+module.exports = User;

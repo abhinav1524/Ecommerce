@@ -143,7 +143,7 @@ exports.deleteProduct=async (req, res) => {
         }
 
         await Product.findByIdAndDelete(id); // Delete the product from the database
-        res.json({ message: 'Product deleted successfully' });
+        res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
         console.error('Error deleting product:', error);
         res.status(500).json({ message: 'Server error' });
