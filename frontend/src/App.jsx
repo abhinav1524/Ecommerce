@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import Header from './components/Header'
-import Footer from './components/Footer'
+import { Routes, Route } from 'react-router-dom'; 
 import Index from "./pages/Index"
 import SignIn from "./pages/SignIn"
 import SignUp from './pages/SignUp'
@@ -11,23 +9,30 @@ import SingleProduct from './pages/SingleProduct'
 import AddToCart from './pages/AddToCart'
 import CheckOut from './pages/CheckOut'
 import OrderPlacedMessage from './pages/OrderPlacedMessage'
+import AdminDashboard from './admin/AdminDashboard';
+import Profile from './pages/Profile';
+import ProtectedRoute from './middleware/ProtectedRoute';
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-    <Header/>
-    <Index/>
-    {/* <Contact/> */}
-    {/* <About/> */}
-    {/* <SignUp/> */}
-    {/* <Shoping/> */}
-    {/* <SingleProduct/> */}
-    {/* <AddToCart/> */}
-    {/* <CheckOut/> */}
-    {/* <OrderPlacedMessage/> */}
-     <Footer/>
-    </>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/shop" element={<Shoping />} />
+      <Route path="/product/:id" element={<SingleProduct />} />
+      <Route path="/cart" element={<AddToCart />} />
+      <Route path="/checkout" element={<CheckOut />} />
+      <Route path="/order-placed" element={<OrderPlacedMessage />} />
+      <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+      {/* Add more routes as needed */}
+      <Route path="/admin" element={<AdminDashboard/>} />
+    </Routes>
   )
 }
 

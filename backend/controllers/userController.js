@@ -2,27 +2,42 @@ const User = require('../models/User');
 const passport = require('passport'); 
 const bcrypt =require('bcrypt');
 
-exports.registerUser =async (req,res) =>{
-    const {name,email,phoneNumber,address,password} = req.body;
+exports.registerUser = async (req, res) => {
+    const { name, email, phoneNumber, address, password } = req.body;
     try {
-        const existingUser = await User.findOne({email});
-        if(existingUser){
-            return res.status(400).json({message:'user already exist'})
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
         }
-        const hashedPassword = await bcrypt.hash(password,10);
-        const newUser =new User({
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({
             name,
             email,
             phoneNumber,
             address,
-            password:hashedPassword,
-        })
-        await newUser.save();
-        res.status(201).json({message:"user registered successfully"});
+            password: hashedPassword,
+        });
+
+        // Save the user and store the result in savedUser
+        const savedUser = await newUser.save();
+
+        // Return user object along with success message
+        res.status(201).json({
+            message: 'User registered successfully',
+            user: {
+                id: savedUser._id,
+                name: savedUser.name,
+                email: savedUser.email,
+                phoneNumber: savedUser.phoneNumber,
+                address: savedUser.address,
+            }
+        });
     } catch (error) {
-        res.status(500).json({message:'server error',error:error.message});
+        console.error('Error during user registration:', error); // Log the error for debugging
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
-}
+};
 
 exports.loginUser = (req, res, next) => {
     passport.authenticate('local', (error, user, info) => {
@@ -41,7 +56,14 @@ exports.loginUser = (req, res, next) => {
         }
         req.logIn(user, (error) => {
             if (error) return next(error);
-            return res.status(200).json({ message: 'Login successful', user }); // Return user object
+            return res.status(200).json({ message: 'Login successful',
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    phoneNumber: user.phoneNumber,
+                    address: user.address,
+                },
+            }); // Return user object
         });
     })(req, res, next);
 };

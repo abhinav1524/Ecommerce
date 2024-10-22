@@ -4,6 +4,7 @@ const {getAllProducts,createProduct,getProductDetials,updateProduct,deleteProduc
 const {getAllCategories,createCategory,updateCategory,deleteCategory,getCategoryDetials}=require("../controllers/categoryController");
 const {getAllOrders,updateOrderStatus,cancelOrder}=require("../controllers/orderController");
 const {toggleUserBlock}=require("../controllers/userController");
+const {handleRefundRequest} =require("../controllers/refundController");
 // const { getAllInventories,createInventory, getSingleInventory, updateInventory, deleteInventory } = require('../controllers/inventoryController');
 // Define admin product route
 router.get('/product',getAllProducts);
@@ -24,6 +25,8 @@ router.patch('/orders/:id/cancel', cancelOrder);
 // user block unblock route //
 // In your admin routes file
 router.patch('/users/:id/toggle-block', toggleUserBlock);
+// return or refund route //
+router.post('/refund',handleRefundRequest);
 // route for inventory //
 // router.get('/inventory', getAllInventories);
 // router.post('/inventory', createInventory);

@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState} from 'react'
+import { Link } from 'react-router-dom';
 const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleNav = () => {
@@ -26,29 +27,29 @@ const Header = () => {
             </button>
 
             <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10">
-                <a href="#" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Home </a>
+                <Link to="/" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Home </Link>
 
-                <a href="#" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Shop </a>
+                <Link to="/shop" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Shop </Link>
 
-                <a href="#" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> About </a>
+                <Link to="/about" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> About </Link>
 
-                <a href="#" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact </a>
+                <Link to="/contact" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact </Link>
 
-                <a href="#" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Login </a>
+                <Link to="/signin" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Login </Link>
 
-                <a href="#" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Register </a>
+                <Link to="/signup" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Register </Link>
             </div>
         </nav>
         {isNavOpen && (
         <nav className="pt-4 pb-6 bg-white border border-gray-200 rounded-md shadow-md lg:hidden">
           <div className="flow-root">
             <div className="flex flex-col px-6 -my-2 space-y-1">
-              <a href="#" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Home </a>
-              <a href="#" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Shop </a>
-              <a href="#" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> About </a>
-              <a href="#" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Contact </a>
-              <a href="#" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Login </a>
-              <a href="#" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Register </a>
+              <Link to="/" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Home </Link>
+              <Link to="/" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Shop </Link>
+              <Link to="/" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> About </Link>
+              <Link to="/" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Contact </Link>
+              <Link to="/" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Login </Link>
+              <Link to="/" className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"> Register </Link>
             </div>
           </div>
         </nav>

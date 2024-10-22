@@ -5,4 +5,4 @@ const isAdmin =(req,res,next)=>{
     }
     res.status(401).json({message:'Access Denied:Admin Only'})
 }
-module.exports ={isAdmin};
+module.exports =isAdmin;

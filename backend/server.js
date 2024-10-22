@@ -6,6 +6,7 @@ const passportConfig = require('./config/passportConfig'); // Ensure this points
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/buyProducts');
 const admin = require('./routes/adminRoutes');
+const isAdmin =require("./middlewares/isAdmin");
 const cart = require('./routes/cartRoutes');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -19,7 +20,11 @@ connectDB();
 const app = express();
 
 // Middleware setup
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173', // your frontend URL
+    credentials: true, // Allow cookies to be sent
+  };
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true })); // handle simple form data without image
 app.use(express.json()); // handle json data
 
@@ -38,7 +43,7 @@ passportConfig(passport); // Ensure your passport config is set up correctly
 // User routes
 app.use('/api/users', userRoutes);
 app.use('/api/products',productRoutes);
-app.use('/api/admin',admin);
+app.use('/api/admin',isAdmin,admin);
 app.use('/api/',cart);
 // Basic route to confirm server is running
 app.get('/', (req, res) => {

@@ -1,6 +1,51 @@
-import React from 'react'
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from "../context/UserContext";
 
 const SignIn = () => {
+    const { login} = useContext(UserContext);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+  
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        console.log('Username:', username);
+        console.log('Password:', password);
+        
+        try {
+            const response = await fetch('http://localhost:5000/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: username, password }), // Ensure you're sending the correct data
+            });
+    
+            const data = await response.json(); // Process the response
+    
+            console.log(data); // Check what you're getting back from the server
+    
+            if (response.ok) {
+                // Save user data in context and localStorage
+                login(data.user); // This should be your login function that sets the user context
+                localStorage.setItem('user', JSON.stringify(data.user)); // Store user in localStorage
+                
+                // Redirect based on user role
+                if (data.user.role === 'admin') {
+                    navigate('/admin'); // Redirect to admin dashboard
+                } else {
+                    navigate('/profile'); // Redirect to profile page (changed from '/' to '/profile')
+                }
+            } else {
+                console.error('Login failed:', data.message); // Handle error
+            }
+        } catch (error) {
+            console.error('Error during login:', error); // Log any errors
+        }
+    };
+    
+      
   return (
     <>
     <section className="bg-white mt-10 lg:mt-0">
@@ -8,15 +53,17 @@ const SignIn = () => {
         <div className="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
             <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
                 <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign in to Celebration</h2>
-                <form action="#" method="POST" className="mt-8">
+                <form onSubmit={handleLogin} className="mt-8">
                     <div className="space-y-5">
                         <div>
                             <label htmlFor="" className="text-base font-medium text-gray-900"> Email address </label>
                             <div className="mt-2.5">
                                 <input
                                     type="email"
-                                    name=""
-                                    id=""
+                                    name="email"
+                                    id="email"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     placeholder="Enter email to get started"
                                     className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                 />
@@ -32,8 +79,10 @@ const SignIn = () => {
                             <div className="mt-2.5">
                                 <input
                                     type="password"
-                                    name=""
-                                    id=""
+                                    name="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Enter your password"
                                     className="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                 />
