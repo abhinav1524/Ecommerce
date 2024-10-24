@@ -1,11 +1,14 @@
 import React from 'react'
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen); // Toggle the nav state
   };
+  // toggle between profile and login link //
+  const { user } = useContext(UserContext);
   return (
     <>
   <header className="fixed top-0 w-full pb-6 bg-white lg:pb-0 z-50">
@@ -34,10 +37,9 @@ const Header = () => {
                 <Link to="/about" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> About </Link>
 
                 <Link to="/contact" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Contact </Link>
-
-                <Link to="/signin" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Login </Link>
-
-                <Link to="/signup" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Register </Link>
+                {
+                  user?(<Link to="/profile" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> My Account </Link>):(<Link to="/signin" title="" className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"> Login </Link>)
+                }
             </div>
         </nav>
         {isNavOpen && (

@@ -9,10 +9,7 @@ const SignIn = () => {
     const navigate = useNavigate();
   
     const handleLogin = async (e) => {
-        e.preventDefault();
-        console.log('Username:', username);
-        console.log('Password:', password);
-        
+        e.preventDefault();        
         try {
             const response = await fetch('http://localhost:5000/api/users/login', {
                 method: 'POST',
@@ -35,7 +32,7 @@ const SignIn = () => {
                 if (data.user.role === 'admin') {
                     navigate('/admin'); // Redirect to admin dashboard
                 } else {
-                    navigate('/profile'); // Redirect to profile page (changed from '/' to '/profile')
+                    navigate('/'); // Redirect to profile page (changed from '/' to '/profile')
                 }
             } else {
                 console.error('Login failed:', data.message); // Handle error
@@ -121,7 +118,7 @@ const SignIn = () => {
                         </div>
                         Sign in with Facebook
                     </button>
-                    <p className="mt-2 text-base text-gray-600">Don’t have an account? <a href="#" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 hover:underline focus:text-blue-700">Create a free account</a></p>
+                    <p className="mt-2 text-base text-gray-600">Don’t have an account? <a href="/signup" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 hover:underline focus:text-blue-700">Create a free account</a></p>
                 </div>
             </div>
         </div>

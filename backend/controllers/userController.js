@@ -41,32 +41,43 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = (req, res, next) => {
     passport.authenticate('local', (error, user, info) => {
-        if (error) return next(error);
-        if (!user) {
-            return res.status(400).json({ message: info.message,user: {
-                username: user.username,
-                role: user.role
-            } });
+        if (error) {
+            return next(error); // Handle authentication errors
         }
-        // find if user is block by admin or not //
+
+        if (!user) {
+            return res.status(400).json({ 
+                message: info.message // Send back the info message if the user is not found
+            });
+        }
+
+        // Check if user is blocked
         if (user.isBlocked) {
             return res.status(403).json({
                 message: 'Your account is blocked by admin. Contact the site owner to unblock your account.'
             });
         }
+
+        // Log in the user
         req.logIn(user, (error) => {
-            if (error) return next(error);
-            return res.status(200).json({ message: 'Login successful',
+            if (error) {
+                return next(error); // Handle login errors
+            }
+            console.log("User logged in:", req.user);
+            return res.status(200).json({ 
+                message: 'Login successful',
                 user: {
+                    id: user.id,
                     name: user.name,
                     email: user.email,
                     phoneNumber: user.phoneNumber,
                     address: user.address,
                 },
-            }); // Return user object
+            });
         });
     })(req, res, next);
 };
+
 
 exports.logoutUser = (req, res) => {
     req.logout((err) => {
@@ -100,4 +111,39 @@ exports.toggleUserBlock = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.editUser = async (req,res) => {
+    try {
+        const {id}=req.params;
+        const user=await User.findById(id);
+        if(!user){
+            res.status(404).json({message:"No user found"});
+        }
+        res.status(200).json(user);
+     } catch (error) {
+        res.status(500).json({ message: 'Error fetching user details', error });
+     }
+}
+
+exports.updateUser=async(req,res)=>{
+    try {
+        const {id}=req.params;
+        const updateuser=await User.findById(id);
+        if(!updateuser){
+            res.status(404).json({message:"No user found"});
+        }
+        if (!updateuser) {
+            return res.status(400).json({ message: 'all field are required' });
+        }
+        updateuser.name = req.body.name;
+        updateuser.email = req.body.email;
+        updateuser.phoneNumber = req.body.phoneNumber;
+        updateuser.address = req.body.address;
+        await updateuser.save();
+        res.status(200).json(updateuser);
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
 

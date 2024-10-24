@@ -8,6 +8,8 @@ const productRoutes = require('./routes/buyProducts');
 const admin = require('./routes/adminRoutes');
 const isAdmin =require("./middlewares/isAdmin");
 const cart = require('./routes/cartRoutes');
+const shippingRoutes = require('./routes/shippingRoutes');
+const verifyToken= require('./middlewares/verifyToken');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -33,18 +35,23 @@ app.use(session({
     secret:process.env.SECRET_KEY, // Ensure to use a strong secret
     resave: false,
     saveUninitialized: false, // Fixed: 'saveUnintialized' should be 'saveUninitialized'
+    cookie: { secure: false,maxAge: 1000 * 60 * 60 }
 }));
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 passportConfig(passport); // Ensure your passport config is set up correctly
-
 // User routes
 app.use('/api/users', userRoutes);
+// product routes
 app.use('/api/products',productRoutes);
+// admin routes 
 app.use('/api/admin',isAdmin,admin);
+// cart routes
 app.use('/api/',cart);
+// shipping routes
+app.use('/api/users',verifyToken, shippingRoutes);
 // Basic route to confirm server is running
 app.get('/', (req, res) => {
     res.send("API is running...");
