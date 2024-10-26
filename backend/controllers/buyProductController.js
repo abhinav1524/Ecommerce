@@ -1,4 +1,17 @@
 const stripe = require('stripe')('your_stripe_secret_key');
+const Order = require("../models/order");
+const getallorders =async (req,res)=>{
+  try {
+    const userId = req.user._id;
+    console.log(userId);
+    const orders = await Order.find().populate('orderItems.product');
+    console.log("Fetched orders:", orders);
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
 
 const createOrder = async (req, res) => {
   try {
@@ -32,4 +45,4 @@ const createOrder = async (req, res) => {
     res.status(500).json({ message: 'Payment failed', error });
   }
 };
-module.exports = createOrder;
+module.exports = {createOrder,getallorders};

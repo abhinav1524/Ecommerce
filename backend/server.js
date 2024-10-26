@@ -9,7 +9,6 @@ const admin = require('./routes/adminRoutes');
 const isAdmin =require("./middlewares/isAdmin");
 const cart = require('./routes/cartRoutes');
 const shippingRoutes = require('./routes/shippingRoutes');
-const verifyToken= require('./middlewares/verifyToken');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -51,7 +50,7 @@ app.use('/api/admin',isAdmin,admin);
 // cart routes
 app.use('/api/',cart);
 // shipping routes
-app.use('/api/users',verifyToken, shippingRoutes);
+app.use('/api/users',passport.authenticate('jwt', { session: false }), shippingRoutes);
 // Basic route to confirm server is running
 app.get('/', (req, res) => {
     res.send("API is running...");

@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const passport = require('passport'); 
 const bcrypt =require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.registerUser = async (req, res) => {
     const { name, email, phoneNumber, address, password } = req.body;
@@ -41,15 +42,8 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = (req, res, next) => {
     passport.authenticate('local', (error, user, info) => {
-        if (error) {
-            return next(error); // Handle authentication errors
-        }
-
-        if (!user) {
-            return res.status(400).json({ 
-                message: info.message // Send back the info message if the user is not found
-            });
-        }
+        if (error) return next(error);
+        if (!user) return res.status(400).json({ message: info.message });
 
         // Check if user is blocked
         if (user.isBlocked) {
@@ -58,22 +52,19 @@ exports.loginUser = (req, res, next) => {
             });
         }
 
-        // Log in the user
-        req.logIn(user, (error) => {
-            if (error) {
-                return next(error); // Handle login errors
-            }
-            console.log("User logged in:", req.user);
-            return res.status(200).json({ 
-                message: 'Login successful',
-                user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    phoneNumber: user.phoneNumber,
-                    address: user.address,
-                },
-            });
+        // Create JWT token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        return res.status(200).json({
+            message: 'Login successful',
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+                address: user.address,
+            },
         });
     })(req, res, next);
 };

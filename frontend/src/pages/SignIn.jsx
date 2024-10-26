@@ -28,6 +28,10 @@ const SignIn = () => {
                 login(data.user); // This should be your login function that sets the user context
                 localStorage.setItem('user', JSON.stringify(data.user)); // Store user in localStorage
                 
+                // Store the JWT token in local storage
+                const token = data.token; // Ensure your server sends the token in the response
+                localStorage.setItem('jwt', token); // Store the token in localStorage
+    
                 // Redirect based on user role
                 if (data.user.role === 'admin') {
                     navigate('/admin'); // Redirect to admin dashboard
@@ -41,6 +45,7 @@ const SignIn = () => {
             console.error('Error during login:', error); // Log any errors
         }
     };
+    
     
       
   return (

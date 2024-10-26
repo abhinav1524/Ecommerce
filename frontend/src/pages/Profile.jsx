@@ -1,12 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext"; // Ensure UserContext is imported
 import Modal from "../model/Model";
-import axios from 'axios';
+import axios from "axios";
+import AddAddress from "../model/AddressModel";
 const Profile = () => {
   const { user, setUser, logout } = useContext(UserContext); // Make sure to include logout from context
   // console.log(user);
   const [addresses, setAddresses] = useState([]);
   const [addressToEdit, setAddressToEdit] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     // Load user data from localStorage if it's not in context
     if (!user) {
@@ -44,56 +50,131 @@ const Profile = () => {
   };
   // tab system functionality //
   const [activeTab, setActiveTab] = useState("orders");
+  // Fetch all Orders on initial load //
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/products/all-orders",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setOrders(response.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
 
-  // Sample data
-  const orders = [
-    { id: 1, product: "Product A", price: "$20", status: "Delivered" },
-    { id: 2, product: "Product B", price: "$30", status: "Pending" },
-  ];
-
- // fetching the address //
- useEffect(() => {
+    fetchOrders();
+  }, []);
+  // Fetch all addresses on initial load
   const fetchAddresses = async () => {
-      try {
-          const response = await axios.get('http://localhost:5000/api/users/shipping-address',{
-            withCredentials: true,
-          }); // Adjust API endpoint accordingly
-          setAddresses(response.data);
-      } catch (error) {
-          console.error('Error fetching addresses', error);
-      }
+    try {
+      const token = localStorage.getItem("jwt");
+      const response = await axios.get(
+        "http://localhost:5000/api/users/shipping-address",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAddresses(response.data);
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+    }
   };
-  fetchAddresses();
-}, []);
-// adding the shipping  address //
-const handleAddAddress = () => {
-  setAddressToEdit(null); // Reset for adding a new address
-  setIsModalOpen(true);
-};
-// edit the shipping address //
-const handleEditAddress = (address) => {
-  setAddressToEdit(address); // Set address to edit
-  setIsModalOpen(true);
-};
-// delete the shipping address //
-const handleDeleteAddress = async (addressId) => {
-  if (window.confirm('Are you sure you want to delete this address?')) {
-      try {
-          await axios.delete(`/api/shipping-addresses/${addressId}`);
-          setAddresses(addresses.filter((address) => address._id !== addressId));
-      } catch (error) {
-          console.error('Error deleting address', error);
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
+  // Open modal to add a new address
+  const handleAddAddress = () => {
+    setAddressToEdit(null); // Clear edit data for a new address
+    setIsAddressModalOpen(true);
+  };
+
+  // Open modal for editing an address
+  const handleEditAddress = (address) => {
+    setAddressToEdit(address); // Set data to edit
+    setIsAddressModalOpen(true);
+  };
+
+  // Submit address data (add or update)
+  const handleAddressSubmit = async (addressData) => {
+    try {
+      let response;
+      const token = localStorage.getItem("jwt");
+      if (addressToEdit) {
+        // Update existing address
+        response = await axios.put(
+          `http://localhost:5000/api/users/update-shipping-address/${addressToEdit._id}`,
+          addressData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        handleAddressChange(response.data);
+      } else {
+        // Add new address
+        response = await axios.post(
+          "http://localhost:5000/api/users/add-shipping-address",
+          addressData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        handleAddressChange(response.data);
       }
-  }
-};
-// updating the address //
-const handleAddressChange = (updatedAddress) => {
-  if (addressToEdit) {
-      setAddresses(addresses.map((address) => (address._id === updatedAddress._id ? updatedAddress : address)));
-  } else {
-      setAddresses([...addresses, updatedAddress]);
-  }
-};
+      fetchAddresses();
+      setIsAddressModalOpen(false); // Close modal after submission
+    } catch (error) {
+      console.error("Error submitting address:", error);
+    }
+  };
+
+  // Update addresses in the state
+  const handleAddressChange = (updatedAddress) => {
+    if (addressToEdit) {
+      setAddresses((prev) =>
+        prev.map((address) =>
+          address._id === updatedAddress._id ? updatedAddress : address
+        )
+      );
+    } else {
+      setAddresses((prev) => [...prev, updatedAddress]);
+    }
+  };
+
+  // Delete an address
+  const handleDeleteAddress = async (addressId) => {
+    if (window.confirm("Are you sure you want to delete this address?")) {
+      try {
+        const token = localStorage.getItem("jwt");
+        await axios.delete(
+          `http://localhost:5000/api/users/delete-shipping-address/${addressId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAddresses((prev) =>
+          prev.filter((address) => address._id !== addressId)
+        );
+      } catch (error) {
+        console.error("Error deleting address:", error);
+      }
+    }
+  };
   const accountDetails = {
     username: "user123",
     email: "user@example.com",
@@ -111,58 +192,60 @@ const handleAddressChange = (updatedAddress) => {
     console.log("Account deleted");
   };
   // profile model open and close //
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   useEffect(() => {
     // Check if user data exists in local storage
-    const localStorageUser = localStorage.getItem('user');
+    const localStorageUser = localStorage.getItem("user");
     if (localStorageUser) {
-        setUser(JSON.parse(localStorageUser)); // Initialize context with local storage data
-        setLoading(false);
+      setUser(JSON.parse(localStorageUser)); // Initialize context with local storage data
+      setLoading(false);
     } else {
-        // Fetch user details from the backend if not in local storage
-        const fetchUserDetails = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/users/details');
-                setUser(response.data);
-                localStorage.setItem('user', JSON.stringify(response.data)); // Store in local storage
-            } catch (err) {
-                setError('Error fetching user details');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchUserDetails();
-    }
-}, [user.id]);
-
-const handleEditProfile = async (updatedData) => {
-    try {
-        const response = await fetch(`http://localhost:5000/api/users/edit/${user.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedData),
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to update profile');
+      // Fetch user details from the backend if not in local storage
+      const fetchUserDetails = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:5000/api/users/details"
+          );
+          setUser(response.data);
+          localStorage.setItem("user", JSON.stringify(response.data)); // Store in local storage
+        } catch (err) {
+          setError("Error fetching user details");
+        } finally {
+          setLoading(false);
         }
-
-        const updatedUser = await response.json(); // Get the updated user data from response
-        setUser(updatedUser); // Update the user context with new data
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        // refetch the user details after updating //
-        await fetchUserDetails();
-        setIsModalOpen(false); // Close the modal
-    } catch (error) {
-        console.error('Error updating profile:', error);
+      };
+      fetchUserDetails();
     }
-};
-if (loading) return <p>Loading...</p>;
-if (error) return <p>{error}</p>;
+  }, [user.id]);
+
+  const handleEditProfile = async (updatedData) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/users/edit/${user.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
+      }
+
+      const updatedUser = await response.json(); // Get the updated user data from response
+      setUser(updatedUser); // Update the user context with new data
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      // refetch the user details after updating //
+      await fetchUserDetails();
+      setIsModalOpen(false); // Close the modal
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="mt-14 mb-10 flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -197,7 +280,10 @@ if (error) return <p>{error}</p>;
           </div>
         </div>
         <div className="flex justify-between w-full px-4">
-          <button onClick={() => setIsModalOpen(true)}  className="w-full px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-lg shadow hover:bg-blue-600 dark:hover:bg-blue-700 transition">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded-lg shadow hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+          >
             Edit Profile
           </button>
           <button
@@ -249,85 +335,78 @@ if (error) return <p>{error}</p>;
               <div className="tab-item">
                 <h2 className="text-lg font-bold">Order Details</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                {orders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="border p-2 md:p-4 my-2 flex justify-between items-start"
-                  >
-                    <div className="flex-grow">
-                      <h3 className="text-lg font-semibold truncate w-32">{order.product}</h3>
-                      <p className="text-sm">Price: {order.price}</p>
-                      <p className="text-sm">Status: {order.status}</p>
-                      <div className="flex flex-col sm:flex-row sm:space-x-2 mt-4">
-                        <button
-                          onClick={() => handleBuyAgain(order.id)}
-                          className="bg-blue-500 text-white rounded-md px-4 py-2 mb-2 sm:mb-0"
-                        >
-                          Buy Again
-                        </button>
-                        <button
-                          onClick={() => handleViewProduct(order.product)}
-                          className="bg-gray-500 text-white rounded-md px-4 py-2"
-                        >
-                          View Product
-                        </button>
+                  {orders.map((order) => (
+                    <div key={order._id} className="border p-4 my-2">
+                      {order.orderItems.map((item) => (
+                      <div key={item._id} className="d-flex justify-between items-center p-2">
+                        <div>
+                        <h3>Order ID: {item._id}</h3>
+                        <p>Product: {item.product.name}</p>
+                        <p>Description: {item.product.description}</p>
+                        <p>Order Items: {item.quantity}</p>
+                        <p>Price: ${item.product.price}</p>
+                        <p>
+                        Shipping Address: {order.shippingAddress},{" "}
+                      </p>
                       </div>
+                      <div>
+                        <img src="" alt="" className="w-32 h-32 object-cover my-2" />
+                      </div>
+                      </div>
+                    ))}
                     </div>
-                    <div className="flex flex-col items-end mt-0 md:mt-4 md:ml-4">
-                      <button
-                        onClick={() => alert("not working yet")}
-                        className="text-black border rounded-full px-4 py-2 mb-2"
-                      >
-                        Order Details
-                      </button>
-                      <button
-                        onClick={() => alert("not working yet")}
-                        className="text-black border rounded-full px-4 py-2"
-                      >
-                        Invoice Details
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
               </div>
             )}
 
             {activeTab === "addresses" && (
               <div className="tab-item">
                 <div className="flex justify-between items-center">
-                <h2 className="text-lg font-bold text-center">User Addresses</h2>
-                <button
-                      onClick={handleAddAddress}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                    >
-                      Add Address
-                    </button>
+                  <h2 className="text-lg font-bold text-center">
+                    User Addresses
+                  </h2>
+                  <button
+                    onClick={handleAddAddress}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Add Address
+                  </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.isArray(addresses) && addresses.map((address) => (
-  <div key={address._id} className="border p-4 my-2 mr-4">
-    <p>{address.name}</p>
-    <p>{address.houseNumber}</p>
-    <p>{address.street}</p>
-    <p>{address.city}, {address.state} {address.zip}</p>
-    <p>Phone Number: {address.phoneNumber}</p>
-    <button
-      onClick={() => handleEditAddress(address)}
-      className="bg-yellow-500 text-white px-4 py-2 mr-5 mt-5 rounded-md"
-    >
-      Edit
-    </button>
-    <button
-      onClick={() => handleDeleteAddress(address._id)}
-      className="bg-red-500 text-white px-4 py-2 rounded-md"
-    >
-      Remove
-    </button>
-  </div>
-))}
-
-              </div>
+                  {addresses.map((address) => (
+                    <div key={address._id} className="border p-4 my-2 mr-4">
+                      <p>
+                        Address :
+                        <span className="truncate w-2">{address.street}</span>
+                      </p>
+                      <p>
+                        City :{" "}
+                        <span className="truncate w-24">{address.city}</span>
+                      </p>
+                      <p>
+                        State :{" "}
+                        <span className="truncate w-24">{address.state}</span>
+                      </p>
+                      <p>
+                        Pincode :{" "}
+                        <span className="truncate w-24">{address.pincode}</span>
+                      </p>
+                      <button
+                        onClick={() => handleEditAddress(address)}
+                        className="bg-yellow-500 text-white px-4 py-2 mr-5 mt-5 rounded-md"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteAddress(address._id)}
+                        className="bg-red-500 text-white px-4 py-2 rounded-md"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -349,11 +428,17 @@ if (error) return <p>{error}</p>;
       </div>
       {/* Modal for editing profile */}
       <Modal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleEditProfile}
-                userData={user}
-            />
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleEditProfile}
+        userData={user}
+      />
+      <AddAddress
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+        onSubmit={handleAddressSubmit}
+        userData={addressToEdit}
+      />
     </div>
   );
 };
