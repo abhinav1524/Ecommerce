@@ -1,165 +1,205 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 const AddToCart = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [error, setError] = useState(null);
+  const token = localStorage.getItem("jwt");
+  if (!token) {
+    console.log("Token not found in local storage.");
+    return;
+  }
+  //fetching the data form the cart api //
+  const fetchCart = async () => {
+    try {
+        const token = localStorage.getItem('token'); // Replace with your token retrieval method
+        const response = await fetch('http://localhost:5000/api/cart', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch cart');
+        }
+
+        const data = await response.json();
+        setCartItems(data);
+    } catch (error) {
+        console.error(`Error fetching cart:, ${error}`);
+        setError(error.message); // Set error message if there's an error
+    }
+};
+
+useEffect(() => {
+    fetchCart();
+}, []);
+  // Function to increase item quantity
+  const increaseQuantity = (id) => {
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  // Function to decrease item quantity
+  const decreaseQuantity = (id) => {
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+  // Calculate total price
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  const makePayment = async () => {
+    const orderItems = cartItems.map((item) => ({
+      product: item.id, // Use the product ID or any identifier
+      quantity: item.quantity,
+    }));
+    console.log(orderItems);
+    try {
+      const stripe = await loadStripe(
+        "pk_test_51NxPmTSCzRo3Tfm12xjbQZVjqzVYJ9u4Xt2ziAwSVXfw9TJ0zwptwowVPiNE2ZdzcXWZ27eSiseIzLX1RhkSLmTe00ku8sqeIU"
+      );
+      const response = await fetch("http://localhost:5000/api/products/buy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ cartItems: orderItems, paymentMethod: "card" }),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("Server Error:", errorText);
+        return;
+      }
+
+      const session = await response.json();
+      if (!session.id) {
+        console.log("Stripe session ID not returned from backend.");
+        return;
+      }
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+      if (result.error) {
+        console.log(result.error);
+      }
+    } catch (error) {
+      console.log("Payment Error:", error.message);
+    }
+  };
+  //  console.log("Token in localStorage at component render:", localStorage.getItem('jwt'));
   return (
-    <>
-      <div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
-        <div class="sm:flex shadow-md my-10">
-          <div class="w-full sm:w-3/4 bg-white px-6 sm:px-10 py-10">
-            <div class="flex justify-between border-b pb-8">
-              <h1 class="font-semibold text-xl sm:text-2xl">Shopping Cart</h1>
-              <h2 class="font-semibold text-xl sm:text-2xl">3 Items</h2>
-            </div>
-            <div class="flex flex-col md:flex-row md:items-center py-8 border-t border-gray-50">
-              <div class="md:w-4/12 w-full">
-                <img
-                  src="https://i.ibb.co/6gzWwSq/Rectangle-20-1.png"
-                  alt="Black Leather Purse"
-                  class="h-48 w-full object-center object-cover md:block hidden"
-                />
-                <img
-                  src="https://i.ibb.co/TTnzMTf/Rectangle-21.png"
-                  alt="Black Leather Purse"
-                  class="md:hidden w-full h-48 object-center object-cover"
-                />
-              </div>
-              <div class="md:pl-6 md:w-8/12 w-full mt-4 md:mt-0">
-                <p class="text-sm text-gray-800">RF293</p>
-                <div class="flex justify-between items-center mt-2">
-                  <p class="text-base font-black text-gray-800">
-                    Luxe card holder
-                  </p>
-                  <div class="flex items-center space-x-2">
-                    <button class="bg-red-500 text-white text-xl px-4 py-1 rounded hover:bg-red-600">
-                      -
-                    </button>
-                    <span class="text-lg font-semibold text-gray-800">1</span>
-                    <button class="bg-green-500 text-white text-xl px-4 py-1 rounded hover:bg-green-600">
-                      +
-                    </button>
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 mt-2">Height: 10 inches</p>
-                <p class="text-sm text-gray-600 mt-1">Color: Black</p>
-                <p class="text-sm text-gray-600 mt-2">
-                  Composition: 100% calf leather
-                </p>
-                <div class="flex justify-between items-center mt-4">
-                  <div class="flex space-x-4">
-                    <p class="text-sm underline text-gray-800 cursor-pointer">
-                      Add to favorites
-                    </p>
-                    <p class="text-sm underline text-red-500 cursor-pointer">
-                      Remove
-                    </p>
-                  </div>
-                  <p class="text-base font-black text-gray-800">$600</p>
-                </div>
-              </div>
-            </div>
-            {/* adding one more product */}
-            <div class="flex flex-col md:flex-row md:items-center py-8 border-t border-gray-50">
-              <div class="md:w-4/12 w-full">
-                <img
-                  src="https://i.ibb.co/6gzWwSq/Rectangle-20-1.png"
-                  alt="Black Leather Purse"
-                  class="h-48 w-full object-center object-cover md:block hidden"
-                />
-                <img
-                  src="https://i.ibb.co/TTnzMTf/Rectangle-21.png"
-                  alt="Black Leather Purse"
-                  class="md:hidden w-full h-48 object-center object-cover"
-                />
-              </div>
-              <div class="md:pl-6 md:w-8/12 w-full mt-4 md:mt-0">
-                <p class="text-sm text-gray-800">RF293</p>
-                <div class="flex justify-between items-center mt-2">
-                  <p class="text-base font-black text-gray-800">
-                    Luxe card holder
-                  </p>
-                  <div class="flex items-center space-x-2">
-                    <button class="bg-red-500 text-white text-xl px-4 py-1 rounded hover:bg-red-600">
-                      -
-                    </button>
-                    <span class="text-lg font-semibold text-gray-800">1</span>
-                    <button class="bg-green-500 text-white text-xl px-4 py-1 rounded hover:bg-green-600">
-                      +
-                    </button>
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 mt-2">Height: 10 inches</p>
-                <p class="text-sm text-gray-600 mt-1">Color: Black</p>
-                <p class="text-sm text-gray-600 mt-2">
-                  Composition: 100% calf leather
-                </p>
-                <div class="flex justify-between items-center mt-4">
-                  <div class="flex space-x-4">
-                    <p class="text-sm underline text-gray-800 cursor-pointer">
-                      Add to favorites
-                    </p>
-                    <p class="text-sm underline text-red-500 cursor-pointer">
-                      Remove
-                    </p>
-                  </div>
-                  <p class="text-base font-black text-gray-800">$600</p>
-                </div>
-              </div>
-            </div>
-            <a
-              href="#"
-              class="flex font-semibold text-indigo-600 text-sm mt-10"
-            >
-              <svg
-                class="fill-current mr-2 text-indigo-600 w-4"
-                viewBox="0 0 448 512"
-              >
-                <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
-              </svg>
-              Continue Shopping
-            </a>
+    <div className="container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+      <div className="sm:flex shadow-md my-10">
+        <div className="w-full sm:w-3/4 bg-white px-6 sm:px-10 py-10">
+          <div className="flex justify-between border-b pb-8">
+            <h1 className="font-semibold text-xl sm:text-2xl">Shopping Cart</h1>
+            <h2 className="font-semibold text-xl sm:text-2xl">
+              {cartItems.length} Items
+            </h2>
           </div>
-          <div id="summary" class="w-full h-full max-h-100 sm:w-1/4 bg-gray-100 px-6 py-12 mb-2 mr-2">
-            <h1 class="font-semibold text-xl sm:text-2xl border-b pb-8 pt-4">
-              Order Summary
-            </h1>
-            <div class="flex justify-between mt-10 mb-5">
-              <span class="font-semibold text-sm uppercase">Items 3</span>
-              <span class="font-semibold text-sm">$590</span>
-            </div>
-            {/* <div>
-              <label class="font-medium inline-block mb-3 text-sm uppercase">
-                Shipping
-              </label>
-              <select class="block p-2 text-gray-600 w-full text-sm">
-                <option>Standard shipping - $10.00</option>
-              </select>
-            </div> */}
-            {/* <div class="py-10">
-              <label class="font-semibold inline-block mb-3 text-sm uppercase">
-                Promo Code
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your code"
-                class="p-2 text-sm w-full"
-              />
-            </div>
-            <button class="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase w-full">
-              Apply
-            </button> */}
-            <div class="border-t mt-8">
-              <div class="flex font-semibold justify-between py-6 text-sm uppercase">
-                <span>Total cost</span>
-                <span>$600</span>
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-col md:flex-row md:items-center py-8 border-t border-gray-50"
+            >
+              <div className="md:w-4/12 w-full">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="h-48 w-full object-center object-cover"
+                />
               </div>
-              <button class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
-                Checkout
-              </button>
+              <div className="md:pl-6 md:w-8/12 w-full mt-4 md:mt-0">
+                <p className="text-sm text-gray-800">RF293</p>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-base font-black text-gray-800">
+                    {item.name}
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => decreaseQuantity(item.id)}
+                      className="bg-red-500 text-white text-xl px-4 py-1 rounded hover:bg-red-600"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg font-semibold text-gray-800">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => increaseQuantity(item.id)}
+                      className="bg-green-500 text-white text-xl px-4 py-1 rounded hover:bg-green-600"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  Height: {item.size}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Color: {item.color}
+                </p>
+                <div className="flex justify-between items-center mt-4">
+                  <p className="text-sm underline text-gray-800 cursor-pointer">
+                    Add to favorites
+                  </p>
+                  <p className="text-base font-black text-gray-800">
+                    ₹{item.price * item.quantity}
+                  </p>
+                </div>
+              </div>
             </div>
+          ))}
+          <a
+            href="#"
+            className="flex font-semibold text-indigo-600 text-sm mt-10"
+          >
+            Continue Shopping
+          </a>
+        </div>
+        <div
+          id="summary"
+          className="w-full sm:w-1/4 bg-gray-100 px-6 py-12 mb-2"
+        >
+          <h1 className="font-semibold text-xl sm:text-2xl border-b pb-8">
+            Order Summary
+          </h1>
+          <div className="flex justify-between mt-10 mb-5">
+            <span className="font-semibold text-sm uppercase">
+              Items {cartItems.length}
+            </span>
+            <span className="font-semibold text-sm">₹{totalPrice}</span>
+          </div>
+          <div className="border-t mt-8">
+            <div className="flex font-semibold justify-between py-6 text-sm uppercase">
+              <span>Total cost</span>
+              <span>₹{totalPrice}</span>
+            </div>
+            <button
+              className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full"
+              onClick={makePayment}
+            >
+              Checkout
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

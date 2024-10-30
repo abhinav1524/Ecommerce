@@ -16,37 +16,34 @@ const SignIn = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: username, password }), // Ensure you're sending the correct data
+                body: JSON.stringify({ email: username, password }), 
             });
     
-            const data = await response.json(); // Process the response
-    
-            console.log(data); // Check what you're getting back from the server
+            const data = await response.json(); 
+            console.log(data); // Ensure this contains a token
     
             if (response.ok) {
                 // Save user data in context and localStorage
-                login(data.user); // This should be your login function that sets the user context
-                localStorage.setItem('user', JSON.stringify(data.user)); // Store user in localStorage
-                
+                login(data.user);
+                localStorage.setItem('user', JSON.stringify(data.user));
                 // Store the JWT token in local storage
-                const token = data.token; // Ensure your server sends the token in the response
+                const token = data.token; // Ensure your server sends the token
                 localStorage.setItem('jwt', token); // Store the token in localStorage
+                console.log("Token stored:", token); // Log the stored token
     
                 // Redirect based on user role
                 if (data.user.role === 'admin') {
-                    navigate('/admin'); // Redirect to admin dashboard
+                    navigate('/admin');
                 } else {
-                    navigate('/'); // Redirect to profile page (changed from '/' to '/profile')
+                    navigate('/');
                 }
             } else {
-                console.error('Login failed:', data.message); // Handle error
+                console.error('Login failed:', data.message);
             }
         } catch (error) {
-            console.error('Error during login:', error); // Log any errors
+            console.error('Error during login:', error);
         }
-    };
-    
-    
+    }; 
       
   return (
     <>

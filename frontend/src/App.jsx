@@ -12,6 +12,9 @@ import OrderPlacedMessage from './pages/OrderPlacedMessage'
 import AdminDashboard from './admin/AdminDashboard';
 import Profile from './pages/Profile';
 import ProtectedRoute from './middleware/ProtectedRoute';
+import PaymentForm from './pages/PaymentForm';
+import Cancel from './pages/Cancel';
+import Success from './pages/success';
 function App() {
   return (
     <Routes>
@@ -25,6 +28,9 @@ function App() {
       <Route path="/cart" element={<AddToCart />} />
       <Route path="/checkout" element={<CheckOut />} />
       <Route path="/order-placed" element={<OrderPlacedMessage />} />
+      <Route path="/payment" element={<PaymentForm />} />
+      <Route path="/success" element={<Success />} />
+      <Route path="/cancel" element={<Cancel />} />
       <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />

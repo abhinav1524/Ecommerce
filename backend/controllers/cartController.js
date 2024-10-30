@@ -1,6 +1,7 @@
 // controllers/cartController.js
 const Cart = require('../models/cart');
 const Product = require('../models/product');
+
 // Add item to cart
 exports.addToCart = async (req, res) => {
     const { productId, quantity } = req.body;
@@ -11,10 +12,11 @@ exports.addToCart = async (req, res) => {
 
         if (!cart) {
             // If no cart exists, create a new one
+            const productPrice = await getProductPrice(productId);
             cart = new Cart({
                 user: userId,
                 cartItems: [{ product: productId, quantity }],
-                totalPrice: quantity * (await getProductPrice(productId)) // Calculate total price based on product price
+                totalPrice: productPrice * quantity // Calculate total price based on product price
             });
         } else {
             // If the cart exists, update the cartItems
@@ -26,7 +28,7 @@ exports.addToCart = async (req, res) => {
                 const productPrice = await getProductPrice(productId);
 
                 // Update total price
-                cart.totalPrice += (productPrice * quantity) - (productPrice * existingItem.quantity);
+                cart.totalPrice += productPrice * quantity - productPrice * existingItem.quantity;
                 existingItem.quantity += quantity;
             } else {
                 // If the item does not exist in the cart, add it
@@ -56,6 +58,7 @@ exports.getCart = async (req, res) => {
 
         res.status(200).json(cart);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Error fetching cart', error });
     }
 };
@@ -63,8 +66,14 @@ exports.getCart = async (req, res) => {
 // Clear cart
 exports.clearCart = async (req, res) => {
     const userId = req.user._id; // Assuming you're using middleware to get the logged-in user
+
     try {
-        await Cart.findOneAndDelete({ user: userId });
+        const result = await Cart.findOneAndDelete({ user: userId });
+
+        if (!result) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
         res.status(200).json({ message: 'Cart cleared' });
     } catch (error) {
         res.status(500).json({ message: 'Error clearing cart', error });
@@ -74,9 +83,8 @@ exports.clearCart = async (req, res) => {
 // Remove item from cart
 exports.removeFromCart = async (req, res) => {
     const { productId } = req.body;
-    console.log(productId);
     const userId = req.user._id; // Assuming you're using middleware to get the logged-in user
-    console.log(userId);
+
     try {
         const cart = await Cart.findOne({ user: userId });
 
@@ -96,7 +104,6 @@ exports.removeFromCart = async (req, res) => {
             res.status(404).json({ message: 'Item not found in cart' });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: 'Error removing item from cart', error });
     }
 };
