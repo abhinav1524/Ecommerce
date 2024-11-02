@@ -44,10 +44,10 @@ const createOrder = async (req, res) => {
 
     for (const item of cartItems) {
       const product = await Product.findById(item.product);
+      console.log(product);
       if (!product) {
         return res.status(404).json({ message: `Product not found: ${item.product}` });
       }
-
       const quantity = Number(item.quantity); // Ensure quantity is a number
       console.log(`Product ID: ${item.product}, Quantity: ${quantity}, Price: ${product.price}`); // Debugging step
 

@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { UserProvider } from './context/UserContext.jsx'
+import { CartProvider } from './context/CartContext.jsx'
+import { ProductProvider } from './context/ProductContext.jsx'
 import { BrowserRouter as Router } from 'react-router-dom';
 import Header from './components/Header'
 import Footer from './components/Footer' 
@@ -12,6 +14,8 @@ const stripePromise = loadStripe('pk_test_51NxPmTSCzRo3Tfm12xjbQZVjqzVYJ9u4Xt2zi
 createRoot(document.getElementById('root')).render(
   <StrictMode>
    <UserProvider>
+   <ProductProvider>
+    <CartProvider>
       <Router>
         <Header />
         <Elements stripe={stripePromise}>
@@ -19,6 +23,8 @@ createRoot(document.getElementById('root')).render(
         </Elements>
         <Footer />
       </Router>
+      </CartProvider>
+      </ProductProvider>
     </UserProvider>
   </StrictMode>,
 )

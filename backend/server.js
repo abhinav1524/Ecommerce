@@ -7,10 +7,13 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/buyProducts');
 const admin = require('./routes/adminRoutes');
 const isAdmin =require("./middlewares/isAdmin");
+const {isAuthenticated }= require('./middlewares/isAuthenticate');
 const cart = require('./routes/cartRoutes');
 const shippingRoutes = require('./routes/shippingRoutes');
+const displayProducts = require("./routes/productRoute");
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,16 +44,20 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 passportConfig(passport); // Ensure your passport config is set up correctly
+// serving static files //
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // User routes
 app.use('/api/users', userRoutes);
 // product routes
 app.use('/api/products',productRoutes);
 // admin routes 
-app.use('/api/admin',isAdmin,admin);
+app.use('/api/admin',isAuthenticated,isAdmin,admin);
 // cart routes
 app.use('/api/',cart);
 // shipping routes
 app.use('/api/users',passport.authenticate('jwt', { session: false }), shippingRoutes);
+// get products for user //
+app.use(displayProducts);
 // Basic route to confirm server is running
 app.get('/', (req, res) => {
     res.send("API is running...");

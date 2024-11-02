@@ -47,15 +47,13 @@ exports.addToCart = async (req, res) => {
 
 // Get cart items
 exports.getCart = async (req, res) => {
-    const userId = req.user._id; // Assuming you're using middleware to get the logged-in user
-
+    const userId = req.user._id; //  using middleware to get the logged-in user
     try {
         const cart = await Cart.findOne({ user: userId }).populate('cartItems.product');
 
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found' });
         }
-
         res.status(200).json(cart);
     } catch (error) {
         console.log(error);
@@ -65,7 +63,7 @@ exports.getCart = async (req, res) => {
 
 // Clear cart
 exports.clearCart = async (req, res) => {
-    const userId = req.user._id; // Assuming you're using middleware to get the logged-in user
+    const userId = req.user._id; // using middleware to get the logged-in user
 
     try {
         const result = await Cart.findOneAndDelete({ user: userId });
@@ -82,8 +80,9 @@ exports.clearCart = async (req, res) => {
 
 // Remove item from cart
 exports.removeFromCart = async (req, res) => {
-    const { productId } = req.body;
-    const userId = req.user._id; // Assuming you're using middleware to get the logged-in user
+    console.log("contorller hit by request ")
+    const { productId,quantityChange } = req.body;
+    const userId = req.user._id; // using middleware to get the logged-in user
 
     try {
         const cart = await Cart.findOne({ user: userId });
@@ -113,3 +112,43 @@ async function getProductPrice(productId) {
     const product = await Product.findById(productId);
     return product ? product.price : 0; // Assuming your Product model has a price field
 }
+
+exports.updateCartItemQuantity = async (req, res) => {
+    console.log("Controller hit for updating item quantity");
+    const { productId, quantityChange } = req.body; // The change in quantity (+1 or -1)
+    const userId = req.user._id; // Using middleware to get the logged-in user
+    try {
+        const cart = await Cart.findOne({ user: userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        const itemIndex = cart.cartItems.findIndex(item => item.product.toString() === productId);
+
+        if (itemIndex > -1) {
+            const productPrice = await getProductPrice(productId);
+
+            // Update the quantity and check if it falls below 1
+            cart.cartItems[itemIndex].quantity += quantityChange;
+
+            if (cart.cartItems[itemIndex].quantity < 1) {
+                // Remove item if the quantity drops below 1
+                cart.totalPrice -= productPrice * cart.cartItems[itemIndex].quantity; // Adjust total price before removing
+                cart.cartItems.splice(itemIndex, 1);
+            } else {
+                // Adjust total price based on the change
+                cart.totalPrice += productPrice * quantityChange;
+            }
+
+            await cart.save();
+            res.status(200).json({ message: 'Cart item quantity updated', cart });
+        } else {
+            res.status(404).json({ message: 'Item not found in cart' });
+        }
+    } catch (error) {
+        console.error('Error updating item quantity:', error);
+        res.status(500).json({ message: 'Error updating item quantity', error });
+    }
+};
+

@@ -9,7 +9,8 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/'); // Folder to save uploaded files
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Use timestamp to avoid file name collisions
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9); // Generate a unique name
+        cb(null, uniqueSuffix + path.extname(file.originalname)); // Unique filename
     },
 });
 
@@ -29,8 +30,8 @@ exports.getAllProducts=async (req, res) => {
 
 // create the product
 exports.createProduct =async (req, res) => {
-    // console.log('Request body:', req.body);
-    // console.log('Request files:', req.files); 
+    console.log('Request body:', req.body);
+    console.log('Request files:', req.files); 
     try {
         const { name, description, price,brand, category, stock,images } = req.body;
 
@@ -51,7 +52,7 @@ exports.createProduct =async (req, res) => {
             brand,
             category,
             stock,
-            images:req.files.map(file=>file.path)
+            images:req.files.map(file=>file.path.replace(/\\/g, '/'))
         });
 
         // Save the product in the database
@@ -80,12 +81,9 @@ exports.getProductDetials =async (req,res)=>{
 }
 
 exports.updateProduct = async (req, res) => {
-    const { id } = req.params; // Get the product ID from the request parameters
+    const { id } = req.params;
 
     try {
-        // console.log('Request body:', req.body);
-        // console.log('Request files:', req.files);
-
         const product = await Product.findById(id);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -102,7 +100,7 @@ exports.updateProduct = async (req, res) => {
             if (product.images && product.images.length > 0) {
                 const oldImages = product.images;
                 oldImages.forEach((image) => {
-                    const filePath = path.join(__dirname, '..', image); // Adjust the path as necessary
+                    const filePath = path.join(__dirname, '..', image);
                     fs.unlink(filePath, (err) => {
                         if (err) {
                             console.error(`Error deleting old image: ${image}`, err);
@@ -113,8 +111,14 @@ exports.updateProduct = async (req, res) => {
                 });
             }
 
-            // Update the images array with new images
-            product.images = req.files.map(file => file.path); // Update the images array
+            // Clear the images array to replace with new images
+            product.images = [];
+
+            // Use a Set to ensure uniqueness and format paths
+            const uniquePaths = new Set(req.files.map(file => file.path.replace(/\\/g, '/')));
+
+            // Assign unique paths to images array
+            product.images = [...uniquePaths];
         }
 
         // Update product fields
@@ -125,13 +129,15 @@ exports.updateProduct = async (req, res) => {
         product.category = req.body.category;
         product.stock = req.body.stock;
 
-        await product.save(); // Save the updated product
-        res.json({ message: 'Product updated successfully', product }); // Return the updated product
+        await product.save();
+        res.json({ message: 'Product updated successfully', product });
     } catch (error) {
         console.error('Error updating product:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
 
 exports.deleteProduct=async (req, res) => {
     const { id } = req.params; // Get the product ID from the request parameters
