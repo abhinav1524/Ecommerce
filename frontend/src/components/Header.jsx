@@ -1,18 +1,31 @@
 import React from 'react'
-import {useState,useContext} from 'react'
+import {useState,useContext,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { useCart } from '../context/CartContext';
+// import { CartProvider } from '../context/CartContext';
 const Header = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen); // Toggle the nav state
   };
+  // fetch the role is admin or not //
+  useEffect(() => {
+    const user = localStorage.getItem("user"); // or the key name where the user object is stored
+    if (user) {
+      const parsedUser = JSON.parse(user); // Parse the JSON string
+      const userRole = parsedUser.role; // Access the role property
+      if (userRole === "admin") {
+        setIsAdmin(true);
+      }
+    }
+  }, []);
   // toggle between profile and login link //
   const { user } = useContext(UserContext);
   // cart count comes here //
-  const { cart } = useCart();
-  const cartCount = cart.items?.reduce((total, item) => total + (item.quantity || 0), 0) || 0;
+  const { cartCount } = useCart();
+  // console.log(totalItems);
   return (
     <>
       <header className="fixed top-0 w-full pb-6 bg-white lg:pb-0 z-50">
@@ -64,14 +77,23 @@ const Header = () => {
             </button>
 
             <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10">
-              <Link
+              {isAdmin?(
+                <Link
+                to="/admin"
+                title=""
+                className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
+              >
+                {" "}
+                Dashboard{" "}
+              </Link>):(              <Link
                 to="/"
                 title=""
                 className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
               >
                 {" "}
                 Home{" "}
-              </Link>
+              </Link>)}
+
 
               <Link
                 to="/shop"

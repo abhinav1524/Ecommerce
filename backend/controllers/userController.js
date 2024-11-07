@@ -3,6 +3,19 @@ const passport = require('passport');
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
+exports.getAllUsers=async(req,res)=>{
+  try {
+    const users =await User.find();
+    res.status(200).json({
+        users:users
+    })
+    // console.log(users);
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+}
 exports.registerUser = async (req, res) => {
     const { name, email, phoneNumber, address, password } = req.body;
     try {
@@ -60,6 +73,7 @@ exports.loginUser = (req, res, next) => {
             token,
             user: {
                 id: user.id,
+                role:user.role,
                 name: user.name,
                 email: user.email,
                 phoneNumber: user.phoneNumber,

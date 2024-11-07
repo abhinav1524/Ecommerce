@@ -15,6 +15,10 @@ import ProtectedRoute from './middleware/ProtectedRoute';
 import PaymentForm from './pages/PaymentForm';
 import Cancel from './pages/Cancel';
 import Success from './pages/success';
+import UserManagement from './admin/pages/UserManagement';
+import CategoryManagement from './admin/pages/CategoryManagement';
+import OrderManagement from './admin/pages/OrderManagement';
+import ProductManagement from './admin/pages/ProductManagement';
 function App() {
   return (
     <Routes>
@@ -38,6 +42,10 @@ function App() {
           } />
       {/* Add more routes as needed */}
       <Route path="/admin" element={<AdminDashboard/>} />
+      <Route path="/products-management" element={<ProductManagement/>} />
+      <Route path="/orders-management" element={<OrderManagement/>} />
+      <Route path="/categories-management" element={<CategoryManagement/>} />
+      <Route path="/users-management" element={<UserManagement/>} />
     </Routes>
   )
 }

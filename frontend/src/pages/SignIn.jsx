@@ -21,7 +21,23 @@ const SignIn = () => {
     
             const data = await response.json(); 
             console.log(data); // Ensure this contains a token
+            
+            if (!response.ok) {
+                // If the login fails, handle the error message returned from the server
+                if (data.message) {
+                    alert(data.message); // Alert the message received from the server
+                } else {
+                    alert("Login failed. Please try again."); // General error message
+                }
+                return; // Exit the function early
+            }
     
+            // Now, check if the user is blocked
+            if (data.user.isBlocked) {
+                alert("Your account is blocked by admin. Contact the site owner to unblock your account.");
+                return; // Exit the function early
+            }
+
             if (response.ok) {
                 // Save user data in context and localStorage
                 login(data.user);
@@ -32,9 +48,10 @@ const SignIn = () => {
                 console.log("Token stored:", token); // Log the stored token
     
                 // Redirect based on user role
+                // console.log(data.user.role);
                 if (data.user.role === 'admin') {
                     navigate('/admin');
-                } else {
+                }else {
                     navigate('/');
                 }
             } else {

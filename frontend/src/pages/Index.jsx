@@ -1,16 +1,15 @@
 import React from "react";
-import { useCart } from "../context/CartContext";
 import { useProducts } from '../context/ProductContext';
+import { useCart } from "../context/CartContext";
 const Index = () => {
   const { products, loading, error } = useProducts();
   console.log(products);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  const { addToCart } = useCart();
-
-  const handleAddToCart = (productId) => {
-    console.log("i am clicked")
-    addToCart(productId, 1); // assuming you add one quantity by default
+  const {addToCart } = useCart();
+  const handleAddToCart =async (productId) => {
+    const quantity=1;
+    addToCart(productId, quantity); 
   };
   return (
     <>

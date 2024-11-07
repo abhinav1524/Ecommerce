@@ -337,23 +337,29 @@ const Profile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                   {orders.map((order) => (
                     <div key={order._id} className="border p-4 my-2">
+                      <h3 className="pl-2">Order ID: {order._id}</h3>
+                      <h3 className="pl-2">Order Status: {order.orderStatus}</h3>
                       {order.orderItems.map((item) => (
-                      <div key={item._id} className="d-flex justify-between items-center p-2">
-                        <div>
-                        <h3>Order ID: {item._id}</h3>
-                        <p>Product: {item.product.name}</p>
-                        <p>Description: {item.product.description}</p>
-                        <p>Order Items: {item.quantity}</p>
-                        <p>Price: ${item.product.price}</p>
-                        <p>
-                        Shipping Address: {order.shippingAddress},{" "}
-                      </p>
-                      </div>
-                      <div>
-                        <img src="" alt="" className="w-32 h-32 object-cover my-2" />
-                      </div>
-                      </div>
-                    ))}
+                        <div
+                          key={item._id}
+                          className="d-flex justify-between items-center p-2"
+                        >
+                          <div>
+                            <p>Product: {item.product.name}</p>
+                            <p>Description: {item.product.description}</p>
+                            <p>Order Items: {item.quantity}</p>
+                            <p>Price: ${item.product.price}</p>
+                            <p>Shipping Address: {order.shippingAddress}, </p>
+                          </div>
+                          <div>
+                            <img
+                              src=""
+                              alt=""
+                              className="w-32 h-32 object-cover my-2"
+                            />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>

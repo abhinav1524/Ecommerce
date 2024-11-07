@@ -3,59 +3,85 @@ import { useProducts } from "../context/ProductContext";
 import { Link } from "react-router-dom";
 const Shoping = () => {
   const { products, loading, error } = useProducts();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
-  console.log(products);
-  console.log(filteredProducts);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  // filter the products //
-  const handleSearch = () => {
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  };
-  // applying filters //
-  const handleBrandChange = (brand) => {
-    setSelectedBrands((prevBrands) =>
-      prevBrands.includes(brand)
-        ? prevBrands.filter((b) => b !== brand)
-        : [...prevBrands, brand]
-    );
-  };
+const [searchTerm, setSearchTerm] = useState("");
+const [searchResults, setSearchResults] = useState([]); // New state for search results
+const [filteredProducts, setFilteredProducts] = useState([]);
+const [selectedBrands, setSelectedBrands] = useState([]);
+const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
-  // Handle price range input change
-  const handlePriceChange = (e) => {
-    const { name, value } = e.target;
-    setPriceRange((prevRange) => ({
-      ...prevRange,
-      [name]: value,
-    }));
-  };
+useEffect(() => {
+  if (Array.isArray(products) && products.length > 0 && searchResults.length === 0) {
+    setFilteredProducts(products);
+  }
+}, [products, searchResults]);
+console.log(products);
+console.log(filteredProducts);
 
-  // Apply filters when the button is clicked
-  const applyFilters = () => {
-    let filtered = products;
+if (loading) return <p>Loading...</p>;
+if (error) return <p>Error: {error}</p>;
 
-    // Filter by brand
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter((product) =>
-        selectedBrands.includes(product.brand)
-      );
+// Fetch search results from the backend
+const handleSearch = async () => {
+  if (!searchTerm) return;
+  try {
+    const response = await fetch(`http://localhost:5000/api/products/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      setSearchResults(data); // Ensure data is an array
+      setFilteredProducts(data); // Set the filtered products from the search results
+    } else {
+      setSearchResults([]); // Reset if data is not an array
+      setFilteredProducts([]);
     }
+  } catch (error) {
+    console.log('Error fetching search results:', error);
+  }
+};
 
-    // Filter by price range
-    const minPrice = parseFloat(priceRange.min) || 0;
-    const maxPrice = parseFloat(priceRange.max) || 200000;
-    filtered = filtered.filter((product) => {
-      return product.price >= minPrice && product.price <= maxPrice;
-    });
+// Handle brand checkbox changes
+const handleBrandChange = (brand) => {
+  setSelectedBrands((prevBrands) =>
+    prevBrands.includes(brand)
+      ? prevBrands.filter((b) => b !== brand)
+      : [...prevBrands, brand]
+  );
+};
 
-    setFilteredProducts(filtered);
-  };
+// Handle price range input changes
+const handlePriceChange = (e) => {
+  const { name, value } = e.target;
+  setPriceRange((prevRange) => ({
+    ...prevRange,
+    [name]: value,
+  }));
+};
+
+// Apply filters to the products or search results
+const applyFilters = () => {
+  let filtered = searchResults.length > 0 ? searchResults : products; // Use searchResults if available
+
+  // Filter by brand
+  if (selectedBrands.length > 0) {
+    filtered = filtered.filter((product) =>
+      selectedBrands.includes(product.brand)
+    );
+  }
+
+  // Filter by price range
+  const minPrice = parseFloat(priceRange.min) || 0;
+  const maxPrice = parseFloat(priceRange.max) || 200000;
+  filtered = filtered.filter((product) => {
+    return product.price >= minPrice && product.price <= maxPrice;
+  });
+
+  setFilteredProducts(filtered);
+};
+const clearFilters=()=>{
+  setSelectedBrands([]);
+  setPriceRange({ min: "", max: "" });
+  setFilteredProducts(products);
+  console.log("y")
+}
   return (
     <>
       <div className="mt-24 flex justify-center items-center px-4">
@@ -125,7 +151,13 @@ const Shoping = () => {
             onClick={applyFilters}
             class="bg-green-500 text-white w-full py-2 rounded mt-4 hover:bg-green-600"
           >
-            <i class="fas fa-trash-alt mr-2"></i>Apply Filter
+          Apply Filter
+          </button>
+          <button
+            onClick={clearFilters}
+            class="bg-red-500 text-white w-full py-2 rounded mt-4 hover:bg-red-600"
+          >
+          Clear Filter
           </button>
         </aside>
 

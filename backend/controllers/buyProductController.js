@@ -2,7 +2,7 @@ const { STRIPE_SECRET_KEY } = process.env;
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
 const Order = require("../models/order");
 const Product = require("../models/product");
-const User =require("../models/user");
+const User = require("../models/user");
 const ShippingAddress = require("../models/shippingAddress");
 const getallorders = async (req, res) => {
   try {
@@ -29,13 +29,15 @@ const createOrder = async (req, res) => {
     // Fetch user details from the database
     const userDetails = await User.findById(req.user._id);
     if (!userDetails) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Fetch the shipping address from the database using the shippingAddressId
-    const shippingAddress = await ShippingAddress.findOne({ user: req.user._id });
+    const shippingAddress = await ShippingAddress.findOne({
+      user: req.user._id,
+    });
     if (!shippingAddress) {
-      return res.status(404).json({ message: 'Shipping address not found' });
+      return res.status(404).json({ message: "Shipping address not found" });
     }
 
     // Validate cart items and calculate prices
@@ -46,17 +48,25 @@ const createOrder = async (req, res) => {
       const product = await Product.findById(item.product);
       console.log(product);
       if (!product) {
-        return res.status(404).json({ message: `Product not found: ${item.product}` });
+        return res
+          .status(404)
+          .json({ message: `Product not found: ${item.product}` });
       }
       const quantity = Number(item.quantity); // Ensure quantity is a number
-      console.log(`Product ID: ${item.product}, Quantity: ${quantity}, Price: ${product.price}`); // Debugging step
+      console.log(
+        `Product ID: ${item.product}, Quantity: ${quantity}, Price: ${product.price}`
+      ); // Debugging step
 
       if (isNaN(quantity) || quantity <= 0) {
-        return res.status(400).json({ message: `Invalid quantity for product: ${item.product}` });
+        return res
+          .status(400)
+          .json({ message: `Invalid quantity for product: ${item.product}` });
       }
 
       if (isNaN(product.price)) {
-        return res.status(400).json({ message: `Invalid price for product: ${item.product}` });
+        return res
+          .status(400)
+          .json({ message: `Invalid price for product: ${item.product}` });
       }
 
       const totalItemPrice = product.price * quantity; // Calculate total price for this item
@@ -74,44 +84,61 @@ const createOrder = async (req, res) => {
     const shippingPrice = 100; // Fixed shipping price
     const totalPrice = itemsPrice + taxPrice + shippingPrice; // Total price calculation
 
-    console.log(`Tax Price: ${taxPrice}, Shipping Price: ${shippingPrice}, Total Price: ${totalPrice}`); // Debugging step
+    console.log(
+      `Tax Price: ${taxPrice}, Shipping Price: ${shippingPrice}, Total Price: ${totalPrice}`
+    ); // Debugging step
 
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items: await Promise.all(orderItems.map(async (item) => {
-        // Fetch product details again for name and price
-        const product = await Product.findById(item.product); // Make sure to await this if you are using async
-        if (!product) {
-          throw new Error(`Product not found: ${item.product}`);
-        }
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: await Promise.all(
+        orderItems.map(async (item) => {
+          // Fetch product details again for name and price
+          const product = await Product.findById(item.product); // Make sure to await this if you are using async
+          if (!product) {
+            throw new Error(`Product not found: ${item.product}`);
+          }
 
-        const productPrice = Number((product.price * 100).toFixed(0)); // Ensure price is in cents and is a number
-        console.log(`Line Item - Product: ${product.name}, Unit Amount: ${productPrice}, Quantity: ${item.quantity}`); // Debugging step
+          const productPrice = Number((product.price * 100).toFixed(0)); // Ensure price is in cents and is a number
+          console.log(
+            `Line Item - Product: ${product.name}, Unit Amount: ${productPrice}, Quantity: ${item.quantity}`
+          ); // Debugging step
 
-        if (isNaN(productPrice)) {
-          throw new Error(`Invalid price for product: ${item.product}`);
-        }
+          if (isNaN(productPrice)) {
+            throw new Error(`Invalid price for product: ${item.product}`);
+          }
 
-        return {
-          price_data: {
-            currency: 'inr',
-            product_data: {
-              name: product.name, // Use the name from the Product model
+          return {
+            price_data: {
+              currency: "inr",
+              product_data: {
+                name: product.name, // Use the name from the Product model
+              },
+              unit_amount: productPrice, // Price in cents
             },
-            unit_amount: productPrice, // Price in cents
-          },
-          quantity: item.quantity,
-        };
-      })),
-      success_url: 'http://localhost:5173/success',
-      cancel_url: 'http://localhost:5173/cancel',
+            quantity: item.quantity,
+          };
+        })
+      ),
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/cancel",
       customer_email: userDetails.email,
       shipping_address_collection: {
-        allowed_countries: ['IN'], // Specify allowed countries if needed
+        allowed_countries: ["IN"], // Specify allowed countries if needed
       },
     });
+
+    // checking if user already exists //
+    const existingOrder = await Order.findOne({
+      user: req.user._id,
+      paymentId: session.id,
+    });
+    if (existingOrder) {
+      return res
+        .status(400)
+        .json({ message: "Order already exists for this payment." });
+    }
 
     // Create a new order in the database
     const newOrder = new Order({
@@ -119,13 +146,13 @@ const createOrder = async (req, res) => {
       orderItems: orderItems,
       shippingAddress: shippingAddress.street,
       paymentMethod,
-      paymentStatus: 'Pending',
+      paymentStatus: "Pending",
       paymentId: session.id, // Use the session ID for payment
       itemsPrice: Number(itemsPrice.toFixed(2)), // Ensure itemsPrice is a number
       taxPrice,
       shippingPrice,
       totalPrice: Number((totalPrice / 100).toFixed(2)), // Store total price in original currency (not cents) and ensure it's a number
-      orderStatus: 'Processing',
+      orderStatus: "Processing",
     });
 
     // Save order to database
@@ -138,7 +165,5 @@ const createOrder = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 module.exports = { createOrder, getallorders };
