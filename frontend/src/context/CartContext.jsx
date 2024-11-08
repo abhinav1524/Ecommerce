@@ -8,9 +8,6 @@ export const CartProvider = ({ children }) => {
     const [cartCount, setCartCount] = useState(0);
     const [items,setItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [totalItems, setTotalItems] = useState(0);
-    const [cartUpdated, setCartUpdated] = useState(false);
 
     const token = localStorage.getItem('jwt'); // Assuming you store the JWT token in localStorage
 
@@ -36,7 +33,6 @@ export const CartProvider = ({ children }) => {
         const data = await response.json();
         console.log(data.cartItems);
         setItems(data.cartItems);
-        setCartUpdated(true);
         // console.log(data); // Ensure you return the cartItems array from the data
       } catch (error) {
         console.error("Error fetching cart items:", error);
@@ -151,41 +147,6 @@ export const CartProvider = ({ children }) => {
       }
     }
 
-    // Calculate total price and total items whenever cartItems change
-    useEffect(() => {
-      const calculateTotals = () => {
-          // Ensure cartItems is an array and has valid items
-          if (!Array.isArray(cartItems)) {
-              return; // If cartItems is not an array, do nothing
-          }
-  
-          // Check if cartItems has items and each item has the necessary structure
-          const total = cartItems.reduce((acc, item) => {
-              if (item.product && item.product.price && item.quantity) {
-                  return acc + item.product.price * item.quantity;
-              }
-              return acc; // If any item doesn't have the expected structure, skip it
-          }, 0);
-  
-          const itemCount = cartItems.reduce((acc, item) => {
-              if (item.quantity) {
-                  return acc + item.quantity;
-              }
-              return acc; // Skip items without a valid quantity
-          }, 0);
-  
-          // Set the calculated values to state
-          setTotalPrice(total);
-          setTotalItems(itemCount);
-      };
-  
-      // Only calculate totals if cartItems is a valid array
-      if (Array.isArray(cartItems)) {
-          calculateTotals();
-      }
-  }, [cartItems]);
-  
-
     // Load cart count on mount
     useEffect(() => {
         getCartCount();
@@ -194,9 +155,7 @@ export const CartProvider = ({ children }) => {
     return (
         <CartContext.Provider value={{ 
             cartCount, 
-            cartItems, 
-            totalPrice, 
-            totalItems, 
+            cartItems,  
             updateCartQuantity, 
             removeItemFromCart,
             addToCart, 

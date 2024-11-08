@@ -353,7 +353,7 @@ const Profile = () => {
                           </div>
                           <div>
                             <img
-                              src=""
+                              src={`http://localhost:5000/${item.product.images[0]}`}
                               alt=""
                               className="w-32 h-32 object-cover my-2"
                             />

@@ -1,6 +1,9 @@
 import React from "react";
 import { useProducts } from '../context/ProductContext';
 import { useCart } from "../context/CartContext";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 const Index = () => {
   const { products, loading, error } = useProducts();
   console.log(products);
@@ -10,6 +13,27 @@ const Index = () => {
   const handleAddToCart =async (productId) => {
     const quantity=1;
     addToCart(productId, quantity); 
+  };
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    responsive: [
+      {
+        breakpoint: 1024, // For tablets and smaller screens
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 640, // For mobile screens
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
   return (
     <>
@@ -83,70 +107,34 @@ const Index = () => {
                 Explore Our Latest Products
               </p>
             </div>
-
-            <div className="hidden lg:flex lg:items-center lg:space-x-3">
-              <button
-                type="button"
-                className="flex items-center justify-center text-gray-400 transition-all duration-200 bg-transparent border border-gray-300 rounded w-9 h-9 hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                className="flex items-center justify-center text-gray-400 transition-all duration-200 bg-transparent border border-gray-300 rounded w-9 h-9 hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6 mt-10">
             {/* first product */}
+            <Slider {...settings} className="col-span-full w-full">
             {products.map(product => (
-            <div key={product._id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-              <a href="#">
+            <div className="w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <a href="#">
+              {/* Fixed height for image container */}
+              <div className="h-48 w-full overflow-hidden rounded-t-lg mt-5">
                 <img
-                  className="p-8 rounded-t-lg"
+                  className="object-cover w-full h-full"
                   src={`http://localhost:5000/${product.images[0]}`}
                   alt="product image"
                 />
+              </div>
+            </a>
+            <div className="p-5">
+              <a href="#">
+                {/* Limit the description to 2 lines */}
+                <h5 className="text-lg font-semibold capitalize tracking-tight text-gray-900 dark:text-white line-clamp-2">
+                  {product.description}
+                </h5>
               </a>
-              <div className="px-5 pb-5">
-                <a href="#">
-                  <h5 className="text-xl font-semibold capitalize tracking-tight text-gray-900 dark:text-white">
-                    {product.description}
-                  </h5>
-                </a>
-                <div className="flex items-center mt-2.5 mb-5">
-                  <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                    <svg
+              <div className="flex items-center mt-2.5 mb-5">
+                {/* Rating stars */}
+                <div className="flex items-center space-x-1 rtl:space-x-reverse">
+                <svg
                       className="w-4 h-4 text-yellow-300"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
@@ -191,66 +179,27 @@ const Index = () => {
                     >
                       <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                     </svg>
-                  </div>
-                  <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">
-                    5.0
-                  </span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-3xl font-bold text-gray-900 dark:text-white">
-                    ₹{product.price}
-                  </span>
-                  <button
-                    onClick={()=>handleAddToCart(product._id)}
-                    class="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 lg:px-3 2xl:px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    Add to cart
-                  </button>
-                </div>
+                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded ml-3">
+                  5.0
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  ₹{product.price}
+                </span>
+                <button
+                  onClick={() => handleAddToCart(product._id)}
+                  className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700"
+                >
+                  Add to cart
+                </button>
               </div>
             </div>
-            ))}
           </div>
-          <div className="flex items-center justify-center mt-8 space-x-3 lg:hidden">
-            <button
-              type="button"
-              className="flex items-center justify-center text-gray-400 transition-all duration-200 bg-transparent border border-gray-300 rounded w-9 h-9 hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-
-            <button
-              type="button"
-              className="flex items-center justify-center text-gray-400 transition-all duration-200 bg-transparent border border-gray-300 rounded w-9 h-9 hover:bg-blue-600 hover:text-white focus:bg-blue-600 focus:text-white"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
+          
+            ))}
+            </Slider>
           </div>
         </div>
       </section>

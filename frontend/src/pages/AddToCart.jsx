@@ -3,9 +3,18 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useCart } from '../context/CartContext';
 const AddToCart = () => {
   const token = localStorage.getItem("jwt");
-  const {  items,totalPrice,updateCartQuantity,removeItemFromCart,removeAllItems} = useCart();
+  const {  items,updateCartQuantity,removeItemFromCart,removeAllItems} = useCart();
+  const [totalPrice,setTotalPrice]=useState(0);
 console.log(totalPrice);
-  // Fetching the data from the cart API
+  // Getting the total price //
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      const total = items.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+      setTotalPrice(total);
+    };
+
+    calculateTotalPrice();
+  }, [items]);
 
   const handleUpdateQuantity = (productId, quantity, action) => {
     let quantityChange = 0;
