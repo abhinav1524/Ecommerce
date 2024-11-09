@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); // Use express.Router() for routes
 const {getAllProducts,createProduct,getProductDetials,updateProduct,deleteProduct,upload} =require('../controllers/productController');
 const {getAllCategories,createCategory,updateCategory,deleteCategory,getCategoryDetials}=require("../controllers/categoryController");
-const {getAllOrders,updateOrderStatus,cancelOrder}=require("../controllers/orderController");
+const {getAllOrders,updateOrderStatus}=require("../controllers/orderController");
 const {toggleUserBlock,getAllUsers}=require("../controllers/userController");
 const {handleRefundRequest} =require("../controllers/refundController");
 // const { getAllInventories,createInventory, getSingleInventory, updateInventory, deleteInventory } = require('../controllers/inventoryController');
@@ -21,7 +21,6 @@ router.get('/category/:id',getCategoryDetials);
 // Define orders route //
 router.get('/orders/',getAllOrders);
 router.patch('/orders/:id/status', updateOrderStatus); // Update order status
-router.patch('/orders/:id/cancel', cancelOrder);
 // user block unblock route //
 // In your admin routes file
 router.get('/users/',getAllUsers);

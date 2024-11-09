@@ -102,7 +102,9 @@ const CategoryManagement = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <SideBar />
+      <div className="hidden md:block">
+        <SideBar />
+      </div>
       <main className="flex-1 p-6 mt-24">
         <div className="flex justify-between items-center">
           <input
@@ -119,6 +121,7 @@ const CategoryManagement = () => {
             <i className="fa-solid fa-plus"></i>
           </button>
         </div>
+        <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
             <tr>
@@ -152,7 +155,7 @@ const CategoryManagement = () => {
             ))}
           </tbody>
         </table>
-
+        </div>
         {/* Pagination Controls */}
         <div className="flex justify-center mt-4">
         <ReactPaginate

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import SideBar from './components/SideBar';
+import React, { useState } from "react";
+import SideBar from "./components/SideBar";
 const AdminDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <SideBar/>
+      <div className="hidden md:block">
+        <SideBar />
+      </div>
       {/* Main content */}
       <main className="flex-1 p-6">
         {/* Header */}
@@ -13,7 +15,7 @@ const AdminDashboard = () => {
           {/* Toggle Button for Sidebar */}
           <button
             className="md:hidden bg-blue-900 text-white p-2 rounded"
-            onClick={() =>alert("you clicked me")}
+            onClick={() => alert("you clicked me")}
           >
             {/* {isSidebarOpen ? 'Close' : 'Menu'} */}
           </button>

@@ -87,7 +87,9 @@ const UserManagement = () => {
   return (
     <>
       <div className="flex h-screen bg-gray-100">
+      <div className="hidden md:block">
         <SideBar />
+      </div>
         <main className="flex-1 p-6 mt-24 grid grid-rows-[auto_1fr_auto]">
           <div className="flex justify-between items-center">
             <input
@@ -98,6 +100,7 @@ const UserManagement = () => {
               onChange={handleSearch}
             />
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -147,6 +150,7 @@ const UserManagement = () => {
               ))}
             </tbody>
           </table>
+          </div>
           <div className="flex justify-center mt-4">
       <ReactPaginate
         nextLabel=">>"

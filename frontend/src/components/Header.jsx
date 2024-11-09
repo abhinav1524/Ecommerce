@@ -1,27 +1,14 @@
-import React from 'react'
-import {useState,useContext,useEffect} from 'react'
-import { Link } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
-import { useCart } from '../context/CartContext';
+import React from "react";
+import { useState, useContext} from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { useCart } from "../context/CartContext";
 // import { CartProvider } from '../context/CartContext';
 const Header = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen); // Toggle the nav state
   };
-  // fetch the role is admin or not //
-  useEffect(() => {
-    const user = localStorage.getItem("user"); // or the key name where the user object is stored
-    if (user) {
-      const parsedUser = JSON.parse(user); // Parse the JSON string
-      const userRole = parsedUser.role; // Access the role property
-      if (userRole === "admin") {
-        setIsAdmin(true);
-        cartCount
-      }
-    }
-  }, []);
   // toggle between profile and login link //
   const { user } = useContext(UserContext);
   // cart count comes here //
@@ -35,8 +22,8 @@ const Header = () => {
             <div className="flex-shrink-0">
               <a href="#" title="" className="flex">
                 <img
-                  className="w-auto h-8 lg:h-10"
-                  src="https://cdn.rareblocks.xyz/collection/celebration/images/logo.svg"
+                  className="w-auto h-8 lg:h-20"
+                  src="/images/logo/Business Logo.png"
                   alt=""
                 />
               </a>
@@ -78,24 +65,14 @@ const Header = () => {
             </button>
 
             <div className="hidden lg:flex lg:items-center lg:ml-auto lg:space-x-10">
-              {isAdmin?(
-                <Link
-                to="/admin"
-                title=""
-                className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
-              >
-                {" "}
-                Dashboard{" "}
-              </Link>):(              <Link
+              <Link
                 to="/"
                 title=""
                 className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
               >
                 {" "}
                 Home{" "}
-              </Link>)}
-
-
+              </Link>
               <Link
                 to="/shop"
                 title=""
@@ -136,14 +113,14 @@ const Header = () => {
                     to="/cart"
                     title=""
                     className="relative text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
-                  ><i class="fa-solid fa-cart-shopping"></i>
-                  {
-                    <span className="absolute inline-flex items-center justify-center bottom-3 w-4 h-4  text-xs font-medium text-white bg-red-600 rounded-full">
-                      {cartCount}
-                    </span>
-                  }
+                  >
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    {
+                      <span className="absolute inline-flex items-center justify-center bottom-3 w-4 h-4  text-xs font-medium text-white bg-red-600 rounded-full">
+                        {cartCount}
+                      </span>
+                    }
                   </Link>
-  
                 </>
               ) : (
                 <Link
@@ -161,83 +138,74 @@ const Header = () => {
             <nav className="pt-4 pb-6 bg-white border border-gray-200 rounded-md shadow-md lg:hidden">
               <div className="flow-root">
                 <div className="flex flex-col px-6 -my-2 space-y-1">
-                {isAdmin?(
-                <Link
-                to="/admin"
-                title=""
-                className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
-              >
-                {" "}
-                Dashboard{" "}
-              </Link>):(              <Link
-                to="/"
-                title=""
-                className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
-              >
-                {" "}
-                Home{" "}
-              </Link>)}
-
-
-              <Link
-                to="/shop"
-                title=""
-                className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
-              >
-                {" "}
-                Shop{" "}
-              </Link>
-
-              <Link
-                to="/about"
-                title=""
-                className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
-              >
-                {" "}
-                About{" "}
-              </Link>
-
-              <Link
-                to="/contact"
-                title=""
-                className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
-              >
-                {" "}
-                Contact{" "}
-              </Link>
-              {user ? (
-                <>
                   <Link
-                    to="/profile"
+                    to="/"
                     title=""
                     className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
                   >
                     {" "}
-                    My Account{" "}
+                    Home{" "}
                   </Link>
+
                   <Link
-                    to="/cart"
+                    to="/shop"
                     title=""
-                    className="relative text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
-                  ><i class="fa-solid fa-cart-shopping"></i>
-                  {
-                    <span className="absolute inline-flex items-center justify-center bottom-3 w-4 h-4  text-xs font-medium text-white bg-red-600 rounded-full">
-                      {cartCount}
-                    </span>
-                  }
+                    className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
+                  >
+                    {" "}
+                    Shop{" "}
                   </Link>
-  
-                </>
-              ) : (
-                <Link
-                  to="/signin"
-                  title=""
-                  className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
-                >
-                  {" "}
-                  Login{" "}
-                </Link>
-              )}
+
+                  <Link
+                    to="/about"
+                    title=""
+                    className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
+                  >
+                    {" "}
+                    About{" "}
+                  </Link>
+
+                  <Link
+                    to="/contact"
+                    title=""
+                    className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
+                  >
+                    {" "}
+                    Contact{" "}
+                  </Link>
+                  {user ? (
+                    <>
+                      <Link
+                        to="/profile"
+                        title=""
+                        className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
+                      >
+                        {" "}
+                        My Account{" "}
+                      </Link>
+                      <Link
+                        to="/cart"
+                        title=""
+                        className="relative text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
+                      >
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        {
+                          <span className="absolute inline-flex items-center justify-center bottom-3 w-4 h-4  text-xs font-medium text-white bg-red-600 rounded-full">
+                            {cartCount}
+                          </span>
+                        }
+                      </Link>
+                    </>
+                  ) : (
+                    <Link
+                      to="/signin"
+                      title=""
+                      className="inline-flex py-2 text-base font-medium text-black transition-all duration-200 hover:text-blue-600"
+                    >
+                      {" "}
+                      Login{" "}
+                    </Link>
+                  )}
                 </div>
               </div>
             </nav>
@@ -246,6 +214,6 @@ const Header = () => {
       </header>
     </>
   );
-}
+};
 
-export default Header
+export default Header;
