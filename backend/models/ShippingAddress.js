@@ -10,6 +10,6 @@ const shippingAddressSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   });
-  const ShippingAddress = mongoose.models.ShippingAddress || mongoose.model('ShippingAddress', shippingAddressSchema);
+  const shippingAddress = mongoose.models.shippingAddress || mongoose.model('ShippingAddress', shippingAddressSchema);
 
-  module.exports = ShippingAddress;
+  module.exports = shippingAddress;
