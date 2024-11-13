@@ -14,8 +14,8 @@ useEffect(() => {
     setFilteredProducts(products);
   }
 }, [products, searchResults]);
-console.log(products);
-console.log(filteredProducts);
+// console.log(products);
+// console.log(filteredProducts);
 
 if (loading) return <p>Loading...</p>;
 if (error) return <p>Error: {error}</p>;
@@ -80,7 +80,7 @@ const clearFilters=()=>{
   setSelectedBrands([]);
   setPriceRange({ min: "", max: "" });
   setFilteredProducts(products);
-  console.log("y")
+  // console.log("y")
 }
   return (
     <>

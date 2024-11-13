@@ -15,17 +15,6 @@ const OrderPlacedMessage = () => {
             Thank you for your purchase. Your order has been successfully
             placed.
           </p>
-          <div class="mt-6">
-            <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
-              Order Summary
-            </h2>
-            <p class="text-gray-600 dark:text-gray-400">
-              Order ID: <span class="font-semibold">#123456</span>
-            </p>
-            <p class="text-gray-600 dark:text-gray-400">
-              Total Amount: <span class="font-semibold">$120.00</span>
-            </p>
-          </div>
           <div class="mt-8">
             <a
               href="/"

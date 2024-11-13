@@ -5,7 +5,7 @@ const AddToCart = () => {
   const token = localStorage.getItem("jwt");
   const {  items,updateCartQuantity,removeItemFromCart,removeAllItems} = useCart();
   const [totalPrice,setTotalPrice]=useState(0);
-console.log(totalPrice);
+// console.log(totalPrice);
   // Getting the total price //
   useEffect(() => {
     const calculateTotalPrice = () => {
@@ -36,7 +36,7 @@ console.log(totalPrice);
 // }, [handleUpdateQuantity]);
 
   const handleRemove = (productId) => {
-    console.log(productId);
+    // console.log(productId);
     removeItemFromCart(productId);
   };
 
@@ -80,7 +80,7 @@ console.log(totalPrice);
 
   // delete all items //
   const deleteAllItems = async () => {
-    console.log("delete all items function hit");
+    // console.log("delete all items function hit");
     removeAllItems();
   };
 

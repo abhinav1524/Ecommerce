@@ -41,7 +41,7 @@ exports.addToCart = async (req, res) => {
         await cart.save();
         res.status(200).json({ message: 'Item added to cart', cart });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ message: 'Error adding to cart', error });
     }
 };
@@ -57,7 +57,7 @@ exports.getCart = async (req, res) => {
         }
         res.status(200).json(cart);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ message: 'Error fetching cart', error });
     }
 };
@@ -123,7 +123,7 @@ async function getProductPrice(productId) {
 }
 
 exports.updateCartItemQuantity = async (req, res) => {
-    console.log("Controller hit for updating item quantity");
+    // console.log("Controller hit for updating item quantity");
     const { productId, quantityChange } = req.body; // The change in quantity (+1 or -1)
     const userId = req.user._id; // Using middleware to get the logged-in user
     // Validate quantityChange

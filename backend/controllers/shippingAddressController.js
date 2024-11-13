@@ -2,8 +2,8 @@ const ShippingAddress = require("../models/ShippingAddress");
 
 // getting the shipping addresses //
 exports.getShippingAddress = async (req, res) => {
-  console.log("Incoming request headers:", req.headers); // Log headers
-  console.log("User in request:", req.user);
+  // console.log("Incoming request headers:", req.headers);
+  // console.log("User in request:", req.user);
   try {
     const shippingAddresses = await ShippingAddress.find({
       user: req.user._id,
@@ -34,7 +34,7 @@ exports.addShippingAddress = async (req, res) => {
       .status(201)
       .json({ message: "Shipping address added", address: newAddress });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ message: "Failed to add shipping address", error });
   }
 };
@@ -89,7 +89,7 @@ exports.deleteShippingAddress = async (req, res) => {
     await ShippingAddress.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Shipping address deleted successfully" });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ message: "Error deleting shipping address", error });
   }
 };

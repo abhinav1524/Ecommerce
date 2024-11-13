@@ -14,7 +14,7 @@ const displayProducts = require("./routes/productRoute");
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-
+const morgan = require('morgan');
 // Load environment variables from .env file
 dotenv.config();
 
@@ -31,6 +31,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true })); // handle simple form data without image
 app.use(express.json()); // handle json data
+
+// Logging based on the environment
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined')); // Production logging
+  } else {
+    app.use(morgan('dev')); // Development logging
+  }
 
 // Session middleware
 app.use(session({

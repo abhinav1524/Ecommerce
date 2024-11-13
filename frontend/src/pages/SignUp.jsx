@@ -21,7 +21,7 @@ const SignUp = () => {
         });
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         if (response.ok) {
             // Save the user in the context
             setUser(data.user); // Make sure `setUser` is correctly imported and available in the scope

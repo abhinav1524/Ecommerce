@@ -6,7 +6,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 const Index = () => {
   const { products, loading, error } = useProducts();
-  console.log(products);
+  // console.log(products);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   const {addToCart } = useCart();

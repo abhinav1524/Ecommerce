@@ -9,7 +9,7 @@ const getAllInventories =async(req,res)=>{
         res.status(200).json(inventories);
 
      } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ message: 'Error whiel fetching inventory', error });
      }
 }

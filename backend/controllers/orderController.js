@@ -5,7 +5,7 @@ exports.getAllOrders=async(req,res)=>{
         const orders= await Order.find().populate('user').populate('orderItems.product');
         res.json(orders);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ message: 'Server error' });
     }
 }
@@ -26,7 +26,7 @@ exports.updateOrderStatus = async (req, res) => {
         }
         res.status(200).json({ message: 'Order status updated', updatedOrder });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ message: 'Server error' });
     }
 };

@@ -62,7 +62,7 @@ const Profile = () => {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setOrders(response.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -180,16 +180,17 @@ const Profile = () => {
     email: "user@example.com",
   };
 
-  const handleBuyAgain = (orderId) => {
-    console.log(`Buying again for order ID: ${orderId}`);
-  };
+  // const handleBuyAgain = (orderId) => {
+  //   console.log(`Buying again for order ID: ${orderId}`);
+  // };
 
-  const handleViewProduct = (product) => {
-    console.log(`Viewing product: ${product}`);
-  };
+  // const handleViewProduct = (product) => {
+  //   console.log(`Viewing product: ${product}`);
+  // };
 
   const handleDeleteAccount = () => {
-    console.log("Account deleted");
+    alert("your account deleted successfully");
+    // console.log("Account deleted");
   };
   // profile model open and close //
   useEffect(() => {

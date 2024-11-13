@@ -20,7 +20,7 @@ const SignIn = () => {
             });
     
             const data = await response.json(); 
-            console.log(data); // Ensure this contains a token
+            // console.log(data); // Ensure this contains a token
             
             if (!response.ok) {
                 // If the login fails, handle the error message returned from the server
@@ -44,8 +44,8 @@ const SignIn = () => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 // Store the JWT token in local storage
                 const token = data.token; // Ensure your server sends the token
-                localStorage.setItem('jwt', token); // Store the token in localStorage
-                console.log("Token stored:", token); // Log the stored token
+                // localStorage.setItem('jwt', token);
+                // console.log("Token stored:", token);
     
                 // Redirect based on user role
                 // console.log(data.user.role);

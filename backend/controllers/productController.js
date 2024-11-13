@@ -30,11 +30,11 @@ exports.getAllProducts=async (req, res) => {
 
 // create the product
 exports.createProduct =async (req, res) => {
-    console.log('Request body:', req.body);
-    console.log('Request files:', req.files); 
+    // console.log('Request body:', req.body);
+    // console.log('Request files:', req.files); 
     try {
         const { name, description, price,brand, category, stock,images } = req.body;
-        console.log(images);
+        // console.log(images);
         // Validate the input
         if (!name || !description || !price || !category || typeof stock === 'undefined') {
             return res.status(400).json({ message: 'All fields are required' });
@@ -61,7 +61,7 @@ exports.createProduct =async (req, res) => {
         // Respond with the created product
         res.status(201).json(savedProduct);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(500).json({ message: `Server error ${error}` });
     }
 };

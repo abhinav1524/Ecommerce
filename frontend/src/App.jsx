@@ -14,7 +14,7 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './middleware/ProtectedRoute';
 import PaymentForm from './pages/PaymentForm';
 import Cancel from './pages/Cancel';
-import Success from './pages/success';
+import Success from './pages/OrderPlacedMessage';
 import UserManagement from './admin/pages/UserManagement';
 import CategoryManagement from './admin/pages/CategoryManagement';
 import OrderManagement from './admin/pages/OrderManagement';

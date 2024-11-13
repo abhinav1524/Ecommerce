@@ -5,12 +5,12 @@ const getProducts=async(req,res)=>{
         const products = await Product.find(); // Fetch all products from the database
         res.json(products); // Send the products as a JSON response
     } catch (error) {
-        console.error('Error fetching products:', error);
+        // console.error('Error fetching products:', error);
         res.status(500).json({ message: 'Server error' });
     }
 }
 const getSingleProduct=async (req, res) => {
-  console.log('getSingleProduct called with ID:', req.params.id);
+  // console.log('getSingleProduct called with ID:', req.params.id);
     try {
       const productId = req.params.id;
       const product = await Product.findById(productId);
@@ -27,7 +27,7 @@ const getSingleProduct=async (req, res) => {
   }
 const getSearchResult=async (req, res) => {
   const { searchTerm } = req.query;
-  console.log('Search term received:', searchTerm);
+  // console.log('Search term received:', searchTerm);
   try {
     const query = {};
     if (searchTerm) {

@@ -48,7 +48,7 @@ exports.registerUser = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Error during user registration:', error); // Log the error for debugging
+        // console.error('Error during user registration:', error); // Log the error for debugging
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
