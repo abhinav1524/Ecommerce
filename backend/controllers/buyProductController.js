@@ -2,7 +2,7 @@ const { STRIPE_SECRET_KEY } = process.env;
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
 const Order = require("../models/order");
 const Product = require("../models/product");
-const User = require("../models/User");
+const User = require("../models/user");
 const ShippingAddress = require("../models/shippingAddress");
 const getallorders = async (req, res) => {
   try {
