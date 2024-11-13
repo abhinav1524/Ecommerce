@@ -1,4 +1,4 @@
-const ShippingAddress = require("../models/ShippingAddress");
+const ShippingAddress = require("../models/shippingAddress");
 
 // getting the shipping addresses //
 exports.getShippingAddress = async (req, res) => {
