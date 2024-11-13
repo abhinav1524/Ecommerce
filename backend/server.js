@@ -32,13 +32,6 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true })); // handle simple form data without image
 app.use(express.json()); // handle json data
 
-// Logging based on the environment
-if (process.env.NODE_ENV === 'production') {
-    app.use(morgan('combined')); // Production logging
-  } else {
-    app.use(morgan('dev')); // Development logging
-  }
-
 // Session middleware
 app.use(session({
     secret:process.env.SECRET_KEY, // Ensure to use a strong secret
