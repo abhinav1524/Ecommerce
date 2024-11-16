@@ -49,6 +49,7 @@ exports.addToCart = async (req, res) => {
 // Get cart items
 exports.getCart = async (req, res) => {
     const userId = req.user._id; //  using middleware to get the logged-in user
+    // console.log(userId);
     try {
         const cart = await Cart.findOne({ user: userId }).populate('cartItems.product');
 
@@ -57,7 +58,7 @@ exports.getCart = async (req, res) => {
         }
         res.status(200).json(cart);
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         res.status(500).json({ message: 'Error fetching cart', error });
     }
 };

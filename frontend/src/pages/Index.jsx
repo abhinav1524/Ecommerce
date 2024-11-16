@@ -113,7 +113,7 @@ const Index = () => {
             {/* first product */}
             <Slider {...settings} className="col-span-full w-full">
             {products.map(product => (
-            <div className="w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div key={product._id} className="w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a href="#">
               {/* Fixed height for image container */}
               <div className="h-48 w-full overflow-hidden rounded-t-lg mt-5">

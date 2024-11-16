@@ -3,7 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useCart } from '../context/CartContext';
 const AddToCart = () => {
   const token = localStorage.getItem("jwt");
-  const {  items,updateCartQuantity,removeItemFromCart,removeAllItems} = useCart();
+  const {items,updateCartQuantity,removeItemFromCart,removeAllItems,getCartItems} = useCart();
   const [totalPrice,setTotalPrice]=useState(0);
 // console.log(totalPrice);
   // Getting the total price //
@@ -31,9 +31,9 @@ const AddToCart = () => {
         updateCartQuantity(productId, quantityChange);
     }
 };
-// useEffect(() => {
-//   getCartItems();
-// }, [handleUpdateQuantity]);
+useEffect(() => {
+  getCartItems();
+}, []);
 
   const handleRemove = (productId) => {
     // console.log(productId);

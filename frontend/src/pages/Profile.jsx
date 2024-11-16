@@ -39,6 +39,8 @@ const Profile = () => {
       if (response.ok) {
         // Call the logout function from context
         logout(); // This will clear the user from the context and localStorage
+        localStorage.removeItem('cartItems'); // Clear cart data
+        localStorage.removeItem('jwt');       // Clear JWT token
         localStorage.removeItem("user"); // Clear user data from localStorage
         window.location.href = "/signin"; // Redirect to login page after logout
       } else {

@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from "../context/UserContext";
-
+import { useCart } from "../context/CartContext";
 const SignIn = () => {
     const { login} = useContext(UserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const {getitemsandcount } = useCart();
   
     const handleLogin = async (e) => {
         e.preventDefault();        
@@ -20,7 +21,7 @@ const SignIn = () => {
             });
     
             const data = await response.json(); 
-            console.log(data); // Ensure this contains a token
+            // console.log(data); // Ensure this contains a token
             
             if (!response.ok) {
                 // If the login fails, handle the error message returned from the server
@@ -46,13 +47,13 @@ const SignIn = () => {
                 const token = data.token; // Ensure your server sends the token
                 localStorage.setItem('jwt', token);
                 // console.log("Token stored:", token);
-    
                 // Redirect based on user role
                 // console.log(data.user.role);
+                getitemsandcount();
                 if (data.user.role === 'admin') {
                     navigate('/admin');
                 }else {
-                    navigate('/');
+                        navigate('/');
                 }
             } else {
                 console.error('Login failed:', data.message);
@@ -61,7 +62,6 @@ const SignIn = () => {
             console.error('Error during login:', error);
         }
     }; 
-      
   return (
     <>
     <section className="bg-white mt-10 lg:mt-0">
