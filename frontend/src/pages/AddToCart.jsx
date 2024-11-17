@@ -97,7 +97,7 @@ useEffect(() => {
               <div key={item.product._id} className="flex flex-col md:flex-row md:items-center py-8 border-t border-gray-50">
                 <div className="md:w-4/12 w-full">
                   <img
-                    src={`http://localhost:5000/${item.product.images[0]}`}
+                    src={`https://ecommerce-kj7x.onrender.com/${item.product.images[0]}`}
                     alt={item.product.name}
                     className="h-48 w-full object-center object-cover"
                   />
