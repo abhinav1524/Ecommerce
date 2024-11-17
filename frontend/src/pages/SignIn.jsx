@@ -2,6 +2,7 @@ import React, { useContext, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from "../context/UserContext";
 import { useCart } from "../context/CartContext";
+import { Link } from 'react-router-dom';
 const SignIn = () => {
     const { login} = useContext(UserContext);
     const [username, setUsername] = useState('');
@@ -137,7 +138,7 @@ const SignIn = () => {
                         </div>
                         Sign in with Facebook
                     </button>
-                    <p className="mt-2 text-base text-gray-600">Don’t have an account? <a href="/signup" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 hover:underline focus:text-blue-700">Create a free account</a></p>
+                    <p className="mt-2 text-base text-gray-600">Don’t have an account? <Link to="/signup" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 hover:underline focus:text-blue-700">Create a free account</Link></p>
                 </div>
             </div>
         </div>
