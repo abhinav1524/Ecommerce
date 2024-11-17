@@ -25,7 +25,7 @@ const app = express();
 
 // Middleware setup
 const corsOptions = {
-    origin: 'http://localhost:5173', // your frontend URL
+    origin: ['http://localhost:5173', 'https://pcecommerce.onrender.com'], // your frontend URL
     credentials: true, // Allow cookies to be sent
   };
 app.use(cors(corsOptions));
