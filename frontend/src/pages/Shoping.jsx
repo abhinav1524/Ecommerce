@@ -169,7 +169,7 @@ const clearFilters=()=>{
               </span>
               <Link to={`/product/${product._id}`}>
                 <img
-                  src={`http://localhost:5000/${product.images[0]}`}
+                  src={`https://ecommerce-kj7x.onrender.com/${product.images[0]}`}
                   alt="Product"
                   class="mx-auto mb-4 max-h-32"
                 />
