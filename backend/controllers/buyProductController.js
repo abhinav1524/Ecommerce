@@ -121,8 +121,8 @@ const createOrder = async (req, res) => {
           };
         })
       ),
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cancel",
+      success_url: "https://pcecommerce.onrender.com/success",
+      cancel_url: "https://pcecommerce.onrender.com/cancel",
       customer_email: userDetails.email,
       shipping_address_collection: {
         allowed_countries: ["IN"], // Specify allowed countries if needed
