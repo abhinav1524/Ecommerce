@@ -119,7 +119,7 @@ const Index = () => {
               <div className="h-48 w-full overflow-hidden rounded-t-lg mt-5">
                 <img
                   className="object-cover w-full h-full"
-                  src={`http://localhost:5000/${product.images[0]}`}
+                  src={`https://ecommerce-kj7x.onrender.com/${product.images[0]}`}
                   alt="product image"
                 />
               </div>
