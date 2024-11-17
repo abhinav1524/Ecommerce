@@ -14,7 +14,7 @@ export const ProductProvider = ({ children }) => {
     // Function to fetch products
     const fetchProducts = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/getproducts');
+            const response = await fetch('https://ecommerce-kj7x.onrender.com/api/getproducts');
             if (!response.ok) {
                 throw new Error("Error fetching products");
             }

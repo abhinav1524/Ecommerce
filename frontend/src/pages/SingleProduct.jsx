@@ -9,10 +9,10 @@ const SingleProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/${id}`);
+        const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/products/${id}`);
         const data = await response.json();
         setProduct(data);
-        setMainImage(`http://localhost:5000/${data.images[0]}`); // Set initial main image
+        setMainImage(`https://ecommerce-kj7x.onrender.com/${data.images[0]}`); // Set initial main image
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
@@ -45,10 +45,10 @@ const SingleProduct = () => {
               {product.images.map((image, index) => (
                 <div className="border p-1" key={index}>
                   <img
-                    src={`http://localhost:5000/${image}`}
+                    src={`https://ecommerce-kj7x.onrender.com/${image}`}
                     alt={`Thumbnail ${index + 1}`}
                     className="w-20 h-20 object-cover cursor-pointer"
-                    onClick={() => changeImage(`http://localhost:5000/${image}`)} // Update main image on click
+                    onClick={() => changeImage(`https://ecommerce-kj7x.onrender.com/${image}`)} // Update main image on click
                   />
                 </div>
               ))}

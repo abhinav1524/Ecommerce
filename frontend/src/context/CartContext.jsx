@@ -17,7 +17,7 @@ export const CartProvider = ({ children }) => {
         console.error("No token found");
         return;
       }
-      const response = await fetch("http://localhost:5000/api/cart", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/cart", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export const CartProvider = ({ children }) => {
         console.error("No token found");
         return;
       }
-      const response = await fetch("http://localhost:5000/api/cart/count", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/cart/count", {
         method: "GET",
         headers:{
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (productId, quantity) => {
     const token = localStorage.getItem("jwt");
     try {
-      const response = await fetch("http://localhost:5000/api/cart", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export const CartProvider = ({ children }) => {
     const token = localStorage.getItem("jwt");
     try {
       const response = await fetch(
-        `http://localhost:5000/api/cart/update-quantity`,
+        `https://ecommerce-kj7x.onrender.com/api/cart/update-quantity`,
         {
           method: "PUT",
           headers: {
@@ -125,7 +125,7 @@ export const CartProvider = ({ children }) => {
   const removeItemFromCart = async (productId) => {
     const token = localStorage.getItem("jwt");
     try {
-      const response = await fetch(`http://localhost:5000/api/cart/item`, {
+      const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/cart/item`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -147,7 +147,7 @@ export const CartProvider = ({ children }) => {
   const removeAllItems = async () => {
     const token = localStorage.getItem("jwt");
     try {
-      const response = await fetch("http://localhost:5000/api/cart", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/cart", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

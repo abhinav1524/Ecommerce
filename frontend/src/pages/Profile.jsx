@@ -31,7 +31,7 @@ const Profile = () => {
   // Logout functionality
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users/logout", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/users/logout", {
         method: "POST",
         credentials: "include", // Include cookies if necessary for your app
       });
@@ -57,7 +57,7 @@ const Profile = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/products/all-orders",
+          "https://ecommerce-kj7x.onrender.com/api/products/all-orders",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -78,7 +78,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("jwt");
       const response = await axios.get(
-        "http://localhost:5000/api/users/shipping-address",
+        "https://ecommerce-kj7x.onrender.com/api/users/shipping-address",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ const Profile = () => {
       if (addressToEdit) {
         // Update existing address
         response = await axios.put(
-          `http://localhost:5000/api/users/update-shipping-address/${addressToEdit._id}`,
+          `https://ecommerce-kj7x.onrender.com/api/users/update-shipping-address/${addressToEdit._id}`,
           addressData,
           {
             headers: {
@@ -126,7 +126,7 @@ const Profile = () => {
       } else {
         // Add new address
         response = await axios.post(
-          "http://localhost:5000/api/users/add-shipping-address",
+          "https://ecommerce-kj7x.onrender.com/api/users/add-shipping-address",
           addressData,
           {
             headers: {
@@ -162,7 +162,7 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("jwt");
         await axios.delete(
-          `http://localhost:5000/api/users/delete-shipping-address/${addressId}`,
+          `https://ecommerce-kj7x.onrender.com/api/users/delete-shipping-address/${addressId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -206,7 +206,7 @@ const Profile = () => {
       const fetchUserDetails = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:5000/api/users/details"
+            "https://ecommerce-kj7x.onrender.com/api/users/details"
           );
           setUser(response.data);
           localStorage.setItem("user", JSON.stringify(response.data)); // Store in local storage
@@ -223,7 +223,7 @@ const Profile = () => {
   const handleEditProfile = async (updatedData) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/edit/${user.id}`,
+        `https://ecommerce-kj7x.onrender.com/api/users/edit/${user.id}`,
         {
           method: "PATCH",
           headers: {
@@ -356,7 +356,7 @@ const Profile = () => {
                           </div>
                           <div>
                             <img
-                              src={`http://localhost:5000/${item.product.images[0]}`}
+                              src={`https://ecommerce-kj7x.onrender.com/${item.product.images[0]}`}
                               alt=""
                               className="w-32 h-32 object-cover my-2"
                             />

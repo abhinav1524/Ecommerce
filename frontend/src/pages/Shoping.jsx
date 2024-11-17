@@ -24,7 +24,7 @@ if (error) return <p>Error: {error}</p>;
 const handleSearch = async () => {
   if (!searchTerm) return;
   try {
-    const response = await fetch(`http://localhost:5000/api/products/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+    const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/products/search?searchTerm=${encodeURIComponent(searchTerm)}`);
     const data = await response.json();
     if (Array.isArray(data)) {
       setSearchResults(data); // Ensure data is an array
