@@ -85,12 +85,12 @@ useEffect(() => {
   };
 
   return (
-    <div className="container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto mt-10 px-4 sm:px-6 sm:py-8 lg:px-8">
       <div className="sm:flex shadow-md my-10">
         <div className="w-full sm:w-3/4 bg-white px-6 sm:px-10 py-10">
           <div className="flex justify-between border-b pb-8">
-            <h1 className="font-semibold text-xl sm:text-2xl sm:pt-5">Shopping Cart</h1>
-            <h2 className="font-semibold text-xl sm:text-2xl sm:pt-5">{items.length > 0 ? `${items.length} Items` : 'Cart Is Empty'}</h2>
+            <h1 className="font-semibold text-xl sm:text-2xl">Shopping Cart</h1>
+            <h2 className="font-semibold text-xl sm:text-2xl">{items.length > 0 ? `${items.length} Items` : 'Cart Is Empty'}</h2>
           </div>
           {items.length > 0 ? (
             items.map((item) => (
