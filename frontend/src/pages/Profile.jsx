@@ -44,7 +44,7 @@ const Profile = () => {
         localStorage.removeItem('cartItems'); // Clear cart data
         localStorage.removeItem('jwt');       // Clear JWT token
         localStorage.removeItem("user"); // Clear user data from localStorage
-        navigate("/"); // Redirect to login page after logout
+        navigate("/signin"); // Redirect to login page after logout
       } else {
         console.error("Logout failed");
       }
