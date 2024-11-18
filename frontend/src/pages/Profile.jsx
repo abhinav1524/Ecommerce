@@ -3,7 +3,9 @@ import { UserContext } from "../context/UserContext"; // Ensure UserContext is i
 import Modal from "../model/Model";
 import axios from "axios";
 import AddAddress from "../model/AddressModel";
+import {useNavigate} from "react-router-dom";
 const Profile = () => {
+  const navigate=useNavigate();
   const { user, setUser, logout } = useContext(UserContext); // Make sure to include logout from context
   // console.log(user);
   const [addresses, setAddresses] = useState([]);
@@ -42,7 +44,7 @@ const Profile = () => {
         localStorage.removeItem('cartItems'); // Clear cart data
         localStorage.removeItem('jwt');       // Clear JWT token
         localStorage.removeItem("user"); // Clear user data from localStorage
-        window.location.href = "/signin"; // Redirect to login page after logout
+        navigate("/signin"); // Redirect to login page after logout
       } else {
         console.error("Logout failed");
       }
