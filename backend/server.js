@@ -60,6 +60,12 @@ app.use('/api/',cart);
 app.use('/api/users',passport.authenticate('jwt', { session: false }), shippingRoutes);
 // get products for user //
 app.use(displayProducts);
+// static files path for react app //
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
+});
+
 // Basic route to confirm server is running
 app.get('/', (req, res) => {
     res.send("API is running...");
