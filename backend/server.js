@@ -61,9 +61,9 @@ app.use('/api/users',passport.authenticate('jwt', { session: false }), shippingR
 // get products for user //
 app.use(displayProducts);
 // static files path for react app //
-app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
+app.use(express.static(path.join(__dirname, '../frontend', 'dist')));
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
 });
 
 // Basic route to confirm server is running
