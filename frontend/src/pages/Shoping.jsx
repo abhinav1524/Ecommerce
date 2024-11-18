@@ -161,7 +161,7 @@ const clearFilters=()=>{
           </button>
         </aside>
 
-        <section class="w-full lg:w-3/4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <section class="w-full lg:w-3/4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
             <div class="bg-white p-4 rounded-lg shadow-md relative h-[320px]">
               <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
