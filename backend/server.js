@@ -62,10 +62,10 @@ app.use('/api/users',passport.authenticate('jwt', { session: false }), shippingR
 app.use(displayProducts);
 // Serve React app for non-API routes
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, '/client/build')));
+app.use(express.static(path.join(__dirname, '/client/dist')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '/client/dist', 'index.html'));
 });
 // Basic route to confirm server is running
 app.get('/', (req, res) => {
