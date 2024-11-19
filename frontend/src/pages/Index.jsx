@@ -7,8 +7,6 @@ import 'slick-carousel/slick/slick-theme.css';
 const Index = () => {
   const { products, loading, error } = useProducts();
   // console.log(products);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
   const {addToCart } = useCart();
   const handleAddToCart =async (productId) => {
     const quantity=1;
@@ -201,6 +199,11 @@ const Index = () => {
             ))}
             </Slider>
           </div>
+          {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
         </div>
       </section>
     </>

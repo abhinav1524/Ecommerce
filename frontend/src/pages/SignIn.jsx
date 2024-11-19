@@ -5,13 +5,15 @@ import { useCart } from "../context/CartContext";
 import { Link } from 'react-router-dom';
 const SignIn = () => {
     const { login} = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const {getitemsandcount } = useCart();
   
     const handleLogin = async (e) => {
-        e.preventDefault();        
+        e.preventDefault();
+        setLoading(true);        
         try {
             const response = await fetch('https://ecommerce-kj7x.onrender.com/api/users/login', {
                 method: 'POST',
@@ -31,12 +33,14 @@ const SignIn = () => {
                 } else {
                     alert("Login failed. Please try again."); // General error message
                 }
+                setLoading(false);
                 return; // Exit the function early
             }
     
             // Now, check if the user is blocked
             if (data.user.isBlocked) {
                 alert("Your account is blocked by admin. Contact the site owner to unblock your account.");
+                setLoading(false);
                 return; // Exit the function early
             }
 
@@ -56,11 +60,13 @@ const SignIn = () => {
                 }else {
                         navigate('/');
                 }
+                setLoading(false);
             } else {
                 console.error('Login failed:', data.message);
             }
         } catch (error) {
             console.error('Error during login:', error);
+            setLoading(false);
         }
     }; 
   return (
@@ -130,6 +136,7 @@ const SignIn = () => {
                     <button
                         type="button"
                         className="relative inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-gray-700 transition-all duration-200 bg-white border-2 border-gray-200 rounded-md hover:bg-gray-100 focus:bg-gray-100 hover:text-black focus:text-black focus:outline-none"
+                        disabled={loading} // Disable button when loading
                     >
                         <div className="absolute inset-y-0 left-0 p-4">
                             <svg className="w-6 h-6 text-[#2563EB]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -161,6 +168,11 @@ const SignIn = () => {
                 </div>
             </div>
         </div>
+        {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
     </div>
 </section>
     </>

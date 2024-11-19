@@ -5,6 +5,7 @@ const AddToCart = () => {
   const token = localStorage.getItem("jwt");
   const {items,updateCartQuantity,removeItemFromCart,removeAllItems,getCartItems} = useCart();
   const [totalPrice,setTotalPrice]=useState(0);
+  const [loading, setLoading] = useState(false);
 // console.log(totalPrice);
   // Getting the total price //
   useEffect(() => {
@@ -41,6 +42,7 @@ useEffect(() => {
   };
 
   const makePayment = async () => {
+    setLoading(true); 
     const orderItems = items.map((item) => ({
       product: item.product._id,
       quantity: item.quantity,
@@ -60,21 +62,25 @@ useEffect(() => {
       if (!response.ok) {
         const errorText = await response.text();
         console.log("Server Error:", errorText);
+        setLoading(false); 
         return;
       }
 
       const session = await response.json();
       if (!session.id) {
         console.log("Stripe session ID not returned from backend.");
+        setLoading(false); 
         return;
       }
 
       const result = await stripe.redirectToCheckout({ sessionId: session.id });
       if (result.error) {
         console.log(result.error);
+        setLoading(false); 
       }
     } catch (error) {
       console.log("Payment Error:", error.message);
+      setLoading(false); 
     }
   };
 
@@ -157,12 +163,18 @@ useEffect(() => {
             <button
               className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full"
               onClick={makePayment}
+              disabled={loading}
             >
               Checkout
             </button>
           </div>
         </div>
       </div>
+      {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
     </div>
   );
 };

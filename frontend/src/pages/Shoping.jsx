@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useProducts } from "../context/ProductContext";
 import { Link } from "react-router-dom";
 const Shoping = () => {
-  const { products, loading, error } = useProducts();
+const { products, loading,setLoading, error } = useProducts();
 const [searchTerm, setSearchTerm] = useState("");
 const [searchResults, setSearchResults] = useState([]); // New state for search results
 const [filteredProducts, setFilteredProducts] = useState([]);
@@ -17,24 +17,25 @@ useEffect(() => {
 // console.log(products);
 // console.log(filteredProducts);
 
-if (loading) return <p>Loading...</p>;
-if (error) return <p>Error: {error}</p>;
-
 // Fetch search results from the backend
 const handleSearch = async () => {
   if (!searchTerm) return;
+  setLoading(true);
   try {
     const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/products/search?searchTerm=${encodeURIComponent(searchTerm)}`);
     const data = await response.json();
     if (Array.isArray(data)) {
       setSearchResults(data); // Ensure data is an array
       setFilteredProducts(data); // Set the filtered products from the search results
+      setLoading(false);
     } else {
       setSearchResults([]); // Reset if data is not an array
       setFilteredProducts([]);
+      setLoading(false);
     }
   } catch (error) {
     console.log('Error fetching search results:', error);
+    setLoading(false);
   }
 };
 
@@ -196,6 +197,11 @@ const clearFilters=()=>{
             </div>
           ))}
         </section>
+        {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
       </main>
     </>
   );

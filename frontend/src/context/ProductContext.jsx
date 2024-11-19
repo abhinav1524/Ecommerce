@@ -13,6 +13,7 @@ export const ProductProvider = ({ children }) => {
 
     // Function to fetch products
     const fetchProducts = async () => {
+        setLoading(true);
         try {
             const response = await fetch('https://ecommerce-kj7x.onrender.com/api/getproducts');
             if (!response.ok) {
@@ -34,7 +35,7 @@ export const ProductProvider = ({ children }) => {
     }, []);
 
     return (
-        <ProductContext.Provider value={{ products,fetchProducts, loading, error }}>
+        <ProductContext.Provider value={{ products,fetchProducts, loading , setLoading, error }}>
             {children}
         </ProductContext.Provider>
     );
