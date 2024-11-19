@@ -7,10 +7,12 @@ const SignUp = () => {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const { setUser } = useContext(UserContext);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
         const response = await fetch('https://ecommerce-kj7x.onrender.com/api/users/register', {
             method: 'POST',
@@ -26,6 +28,7 @@ const SignUp = () => {
             // Save the user in the context
             setUser(data.user); // Make sure `setUser` is correctly imported and available in the scope
             localStorage.setItem('user', JSON.stringify(data.user)); // Optionally persist the user in localStorage
+            setLoading(false); 
             // Redirect to the user profile
             window.location.href = '/profile'; 
         } else {
@@ -35,6 +38,7 @@ const SignUp = () => {
         }
     } catch (error) {
         console.error('Error during registration:', error);
+      setLoading(false); 
     }
   };
   return (
@@ -272,6 +276,11 @@ const SignUp = () => {
             </div>
           </div>
         </div>
+         {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
       </section>
     </>
   );
