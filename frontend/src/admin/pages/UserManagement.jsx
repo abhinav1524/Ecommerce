@@ -45,8 +45,6 @@ const UserManagement = () => {
         setFilteredUsers(filtered); // Update filtered users
         setCurrentPage(0);
       }, [users, searchTerm]);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -170,12 +168,12 @@ const UserManagement = () => {
       />
     </div>
         </main>
-        {loading && (
+      </div>
+      {loading && (
                 <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
                     <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
                 </div>
             )}
-      </div>
     </>
   );
 };
