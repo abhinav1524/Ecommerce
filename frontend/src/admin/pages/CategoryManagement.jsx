@@ -97,9 +97,6 @@ const CategoryManagement = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
   return (
     <div className="flex h-screen bg-gray-100">
       <div className="hidden md:block">
