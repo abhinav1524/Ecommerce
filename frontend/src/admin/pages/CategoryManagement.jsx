@@ -181,6 +181,11 @@ const CategoryManagement = () => {
         handleModalClose={handleModalClose}
         categoryIdToEdit={categoryIdToEdit}
       />
+      {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
     </div>
   );
 };

@@ -79,9 +79,6 @@ const OrderManagement = () => {
     (currentPage + 1) * itemsPerPage
   );
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
   return (
     <>
       <div className="flex bg-gray-100">
@@ -181,6 +178,11 @@ const OrderManagement = () => {
             />
           </div>
         </main>
+        {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
       </div>
     </>
   );

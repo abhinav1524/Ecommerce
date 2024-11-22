@@ -170,25 +170,11 @@ const UserManagement = () => {
       />
     </div>
         </main>
-          {/* Pagination */}
-          {/* <div className="flex justify-center mt-4">
-          <ReactPaginate
-                nextLabel="Next"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
-                marginPagesDisplayed={2}
-                pageCount={pageCount}
-                previousLabel="Previous"
-                containerClassName="pagination"
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                activeClassName="active"
-            />
-          </div> */}
+        {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
       </div>
     </>
   );

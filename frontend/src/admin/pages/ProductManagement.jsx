@@ -12,13 +12,10 @@ const ProductManagement = () => {
   const itemsPerPage = 5; // Set the number of items per page
 
   // fetching the products
-  const { products, fetchProducts, loading, error } = useProducts();
+  const { products, fetchProducts, loading} = useProducts();
   useEffect(() => {
     fetchProducts();
   }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   // Handle search functionality
   const handleSearch = (event) => {
@@ -182,6 +179,11 @@ const ProductManagement = () => {
           handleModalClose={handleModalClose}
           productIdToEdit={productIdToEdit}
         />
+        {loading && (
+                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                </div>
+            )}
       </div>
     </>
   );
