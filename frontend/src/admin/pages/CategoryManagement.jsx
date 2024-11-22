@@ -20,12 +20,15 @@ const CategoryManagement = () => {
   // Fetch category data
   const fetchCategory = async () => {
     try {
-      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/admin/category/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://ecommerce-kj7x.onrender.com/api/admin/category/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Error fetching categories");
       }
@@ -98,6 +101,7 @@ const CategoryManagement = () => {
   };
 
   return (
+    <>
     <div className="flex h-screen bg-gray-100">
       <div className="hidden md:block">
         <SideBar />
@@ -119,58 +123,60 @@ const CategoryManagement = () => {
           </button>
         </div>
         <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">Category Name</th>
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentCategories.map((category) => (
-              <tr key={category.id}>
-                <td className="border border-gray-300 px-4 py-2">
-                  {category.name}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  <div className="flex justify-around items-center">
-                    <button
-                      onClick={() => handleModalOpen(category._id)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mr-2"
-                    >
-                      <i className="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(category._id)}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded"
-                    >
-                      <i className="fa-regular fa-trash-can"></i>
-                    </button>
-                  </div>
-                </td>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border border-gray-300 px-4 py-2">
+                  Category Name
+                </th>
+                <th className="border border-gray-300 px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentCategories.map((category) => (
+                <tr key={category.id}>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {category.name}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <div className="flex justify-around items-center">
+                      <button
+                        onClick={() => handleModalOpen(category._id)}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mr-2"
+                      >
+                        <i className="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(category._id)}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded"
+                      >
+                        <i className="fa-regular fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         {/* Pagination Controls */}
         <div className="flex justify-center mt-4">
-        <ReactPaginate
-          nextLabel=">>"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          marginPagesDisplayed={2}
-          pageCount={pageCount}
-          previousLabel="<<"
-          containerClassName="flex space-x-2"
-          pageClassName="page-item"
-          pageLinkClassName="page-link px-3 py-1 border border-gray-300 rounded"
-          previousClassName="page-item"
-          previousLinkClassName="page-link px-3 py-1 border border-gray-300 rounded"
-          nextClassName="page-item"
-          nextLinkClassName="page-link px-3 py-1 border border-gray-300 rounded"
-          activeClassName="bg-blue-500 text-white"
-        />
+          <ReactPaginate
+            nextLabel=">>"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            marginPagesDisplayed={2}
+            pageCount={pageCount}
+            previousLabel="<<"
+            containerClassName="flex space-x-2"
+            pageClassName="page-item"
+            pageLinkClassName="page-link px-3 py-1 border border-gray-300 rounded"
+            previousClassName="page-item"
+            previousLinkClassName="page-link px-3 py-1 border border-gray-300 rounded"
+            nextClassName="page-item"
+            nextLinkClassName="page-link px-3 py-1 border border-gray-300 rounded"
+            activeClassName="bg-blue-500 text-white"
+          />
         </div>
       </main>
       <CategoryModal
@@ -178,12 +184,13 @@ const CategoryManagement = () => {
         handleModalClose={handleModalClose}
         categoryIdToEdit={categoryIdToEdit}
       />
-      {loading && (
-                <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
-                    <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-                </div>
-            )}
     </div>
+    {loading && (
+        <div className="absolute inset-0 bg-white bg-opacity-50 flex justify-center items-center">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+        </div>
+      )}
+    </>
   );
 };
 
