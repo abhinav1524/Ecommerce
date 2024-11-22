@@ -20,7 +20,7 @@ const CategoryManagement = () => {
   // Fetch category data
   const fetchCategory = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admin/category/", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/admin/category/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -77,7 +77,7 @@ const CategoryManagement = () => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/admin/category/${categoryId}`,
+          `https://ecommerce-kj7x.onrender.coms/api/admin/category/${categoryId}`,
           {
             method: "DELETE",
             headers: {

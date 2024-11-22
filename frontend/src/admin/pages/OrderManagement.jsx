@@ -13,7 +13,7 @@ const OrderManagement = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admin/orders", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/admin/orders", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const OrderManagement = () => {
    // Function to handle the order status update
    const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/orders/${orderId}/status`, {
+      const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/admin/orders/${orderId}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

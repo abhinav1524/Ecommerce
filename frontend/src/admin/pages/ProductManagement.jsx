@@ -57,7 +57,7 @@ const ProductManagement = () => {
     const token = localStorage.getItem("jwt");
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/product/${productId}`, {
+        const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/admin/product/${productId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,

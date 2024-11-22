@@ -13,7 +13,7 @@ const UserManagement = () => {
   // fetch category //
   const fetchUser = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admin/users/", {
+      const response = await fetch("https://ecommerce-kj7x.onrender.com/api/admin/users/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ const UserManagement = () => {
     // Make API call to update the order status
     try {
       const response = await fetch(
-        `http://localhost:5000/api/admin/users/${userId}/toggle-block`,
+        `https://ecommerce-kj7x.onrender.com/api/admin/users/${userId}/toggle-block`,
         {
           method: "PATCH",
           headers: {
