@@ -128,7 +128,7 @@ const ProductManagement = () => {
                       {product.images.map((imageUrl, index) => (
                         <img
                           key={index}
-                          src={`http://localhost:5000/${imageUrl}`}
+                          src={`https://ecommerce-kj7x.onrender.com/${imageUrl}`}
                           alt={`Product Image ${index + 1}`}
                           className="w-5 h-5"
                         />
