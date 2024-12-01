@@ -1,4 +1,5 @@
 import React from "react";
+import '../App.css';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from "../context/CartContext";
 import Slider from 'react-slick';
@@ -30,12 +31,14 @@ const Index = () => {
         breakpoint: 1024, // For tablets and smaller screens
         settings: {
           slidesToShow: 2,
+          slidesToScroll:2
         },
       },
       {
-        breakpoint: 375, // For mobile screens
+        breakpoint: 480, // For mobile screens
         settings: {
           slidesToShow: 1,
+          slidesToScroll:1
         },
       },
     ],
