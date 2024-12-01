@@ -9,6 +9,13 @@ const Index = () => {
   // console.log(products);
   const {addToCart } = useCart();
   const handleAddToCart =async (productId) => {
+    const token = localStorage.getItem('jwt');
+    console.log(token);
+    if(token){
+      alert("item add ho gayi hai ");
+    }else{
+      alert("noobe login first ");
+    }
     const quantity=1;
     addToCart(productId, quantity); 
   };
@@ -26,7 +33,7 @@ const Index = () => {
         },
       },
       {
-        breakpoint: 640, // For mobile screens
+        breakpoint: 375, // For mobile screens
         settings: {
           slidesToShow: 1,
         },

@@ -22,9 +22,10 @@ const getallorders = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try {
+    console.log("the function is hit");
     // Destructure necessary information from the request body
     const { cartItems, paymentMethod } = req.body;
-    // console.log("Cart Items: ", cartItems); // Debugging step
+    console.log("Cart Items: ", cartItems); // Debugging step
 
     // Fetch user details from the database
     const userDetails = await User.findById(req.user._id);
@@ -46,16 +47,16 @@ const createOrder = async (req, res) => {
 
     for (const item of cartItems) {
       const product = await Product.findById(item.product);
-      // console.log(product);
+      console.log(product);
       if (!product) {
         return res
           .status(404)
           .json({ message: `Product not found: ${item.product}` });
       }
       const quantity = Number(item.quantity); // Ensure quantity is a number
-      // console.log(
-      //   `Product ID: ${item.product}, Quantity: ${quantity}, Price: ${product.price}`
-      // ); // Debugging step
+      console.log(
+        `Product ID: ${item.product}, Quantity: ${quantity}, Price: ${product.price}`
+      ); // Debugging step
 
       if (isNaN(quantity) || quantity <= 0) {
         return res
@@ -77,16 +78,16 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // console.log(`Items Price: ${itemsPrice}`); // Debugging step
+    console.log(`Items Price: ${itemsPrice}`); // Debugging step
 
     // Example fixed tax and shipping prices
     const taxPrice = Number((itemsPrice * 0.05).toFixed(2)); // Assume a tax of 5%
     const shippingPrice = 100; // Fixed shipping price
     const totalPrice = itemsPrice + taxPrice + shippingPrice; // Total price calculation
 
-    // console.log(
-    //   `Tax Price: ${taxPrice}, Shipping Price: ${shippingPrice}, Total Price: ${totalPrice}`
-    // ); // Debugging step
+    console.log(
+      `Tax Price: ${taxPrice}, Shipping Price: ${shippingPrice}, Total Price: ${totalPrice}`
+    ); // Debugging step
 
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -101,9 +102,9 @@ const createOrder = async (req, res) => {
           }
 
           const productPrice = Number((product.price * 100).toFixed(0)); // Ensure price is in cents and is a number
-          // console.log(
-          //   `Line Item - Product: ${product.name}, Unit Amount: ${productPrice}, Quantity: ${item.quantity}`
-          // ); // Debugging step
+          console.log(
+            `Line Item - Product: ${product.name}, Unit Amount: ${productPrice}, Quantity: ${item.quantity}`
+          ); // Debugging step
 
           if (isNaN(productPrice)) {
             throw new Error(`Invalid price for product: ${item.product}`);
