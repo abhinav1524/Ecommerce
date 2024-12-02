@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'; 
+import { Routes, Route ,Navigate } from 'react-router-dom'; 
 import Index from "./pages/Index"
 import SignIn from "./pages/SignIn"
 import SignUp from './pages/SignUp'
@@ -20,6 +20,8 @@ import CategoryManagement from './admin/pages/CategoryManagement';
 import OrderManagement from './admin/pages/OrderManagement';
 import ProductManagement from './admin/pages/ProductManagement';
 function App() {
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const isAdmin = storedUser?.role === 'admin';
   return (
     <Routes>
       <Route path="/" element={<Index />} />
@@ -41,11 +43,11 @@ function App() {
             </ProtectedRoute>
           } />
       {/* Add more routes as needed */}
-      <Route path="/admin" element={<AdminDashboard/>} />
-      <Route path="/products-management" element={<ProductManagement/>} />
-      <Route path="/orders-management" element={<OrderManagement/>} />
-      <Route path="/categories-management" element={<CategoryManagement/>} />
-      <Route path="/users-management" element={<UserManagement/>} />
+      <Route path="/admin" element={isAdmin?<AdminDashboard />:<Navigate to="/signin" replace/>}/>
+      <Route path="/products-management" element={isAdmin?<ProductManagement />:<Navigate to="/signin" replace/>}/>
+      <Route path="/orders-management" element={isAdmin?<OrderManagement />:<Navigate to="/signin" replace/>}/>
+      <Route path="/categories-management" element={isAdmin?<CategoryManagement />:<Navigate to="/signin" replace/>}/>
+      <Route path="/users-management" element={isAdmin?<UserManagement />:<Navigate to="/signin" replace/>}/>
     </Routes>
   )
 }
