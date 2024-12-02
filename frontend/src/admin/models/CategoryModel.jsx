@@ -18,7 +18,7 @@ const CategoryModal = ({ isModalOpen, handleModalClose, categoryIdToEdit }) => {
 
   const fetchCategoryData = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/category/${id}`, {
+      const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/admin/category/${id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,8 +59,8 @@ const CategoryModal = ({ isModalOpen, handleModalClose, categoryIdToEdit }) => {
     }
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/admin/category/${categoryIdToEdit}`
-        : 'http://localhost:5000/api/admin/category/';
+        ? `https://ecommerce-kj7x.onrender.com/api/admin/category/${categoryIdToEdit}`
+        : 'https://ecommerce-kj7x.onrender.com/api/admin/category/';
       const method = isEditing ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
