@@ -68,6 +68,7 @@ const UserManagement = () => {
         throw new Error("Failed to update block status");
       }
       console.log("User status updated successfully!");
+      setLoading(false);
       fetchUser();
     } catch (error) {
       console.error("Error updating user status:", error);
