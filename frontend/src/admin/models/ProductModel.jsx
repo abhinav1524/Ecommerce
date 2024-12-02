@@ -26,7 +26,7 @@ const ProductModal = ({ isModalOpen, handleModalClose, productIdToEdit }) => {
 
   const fetchProductData = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/product/${id}`, {
+      const response = await fetch(`https://ecommerce-kj7x.onrender.com/api/admin/product/${id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -86,8 +86,8 @@ const ProductModal = ({ isModalOpen, handleModalClose, productIdToEdit }) => {
 
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/admin/product/${productIdToEdit}`
-        : 'http://localhost:5000/api/admin/product/';
+        ? `https://ecommerce-kj7x.onrender.com/api/admin/product/${productIdToEdit}`
+        : 'https://ecommerce-kj7x.onrender.com/api/admin/product/';
       const method = isEditing ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
