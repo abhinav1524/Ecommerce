@@ -23,7 +23,7 @@ const UserManagement = () => {
         throw new Error("Error fetching products");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setusers(data.users);
       setFilteredUsers(data.users);
       setLoading(false);
@@ -65,12 +65,12 @@ const UserManagement = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update order status");
+        throw new Error("Failed to update block status");
       }
       console.log("User status updated successfully!");
       fetchUser();
     } catch (error) {
-      console.error("Error updating order status:", error);
+      console.error("Error updating user status:", error);
       // Optionally revert the status change in case of an error
     }
   };
