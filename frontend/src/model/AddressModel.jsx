@@ -43,8 +43,8 @@ const AddressModel = ({ isOpen, onClose, onSubmit, userData }) => {
     if (!isOpen) return null;
 
     return (
-       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-10">
-    <div className="bg-white p-6 rounded shadow-lg mx-4 sm:mx-6 md:mx-10 w-full max-w-md sm:max-w-lg">
+       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="mt-20 bg-white p-6 rounded shadow-lg mx-4 sm:mx-6 md:mx-10 w-full max-w-md sm:max-w-lg">
         <h2 className="text-lg sm:text-xl mb-4 text-center font-semibold">
             {userData ? 'Edit Address' : 'Add Address'}
         </h2>
@@ -114,7 +114,7 @@ const AddressModel = ({ isOpen, onClose, onSubmit, userData }) => {
                     className="border rounded p-2 w-full text-sm sm:text-base"
                 />
             </div>
-            <div className="flex flex-row justify-end items-center sm:items-start">
+            <div className="flex justify-between items-center sm:items-start">
                 <button
                     type="button"
                     onClick={onClose}
