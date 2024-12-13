@@ -43,41 +43,95 @@ const AddressModel = ({ isOpen, onClose, onSubmit, userData }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded shadow-lg w-1/3">
-                <h2 className="text-xl mb-4">{userData ? 'Edit Address' : 'Add Address'}</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label>Street Address</label>
-                        <input type="text" name="street" value={formData.street} onChange={handleChange} className="border rounded p-2 w-full"/>
-                    </div>
-                    <div className="mb-4">
-                        <label>City</label>
-                        <input type="text" name="city" value={formData.city} onChange={handleChange} className="border rounded p-2 w-full"/>
-                    </div>
-                    <div className="mb-4">
-                        <label>State</label>
-                        <input type="text" name="state" value={formData.state} onChange={handleChange} className="border rounded p-2 w-full"/>
-                    </div>
-                    <div className="mb-4">
-                        <label>Pincode</label>
-                        <input type="text" name="pincode" value={formData.pincode} onChange={handleChange} className="border rounded p-2 w-full"/>
-                    </div>
-                    <div className="mb-4">
-                        <label>Country</label>
-                        <input type="text" name="country" value={formData.country} onChange={handleChange} className="border rounded p-2 w-full"/>
-                    </div>
-                    <div className="flex justify-end">
-                        <button type="button" onClick={onClose} className="bg-gray-300 px-4 py-2 rounded mr-2">
-                            Cancel
-                        </button>
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                            {userData ? 'Update' : 'Add'} Address
-                        </button>
-                    </div>
-                </form>
+       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white p-6 rounded shadow-lg mx-4 sm:mx-6 md:mx-10 w-full max-w-md sm:max-w-lg">
+        <h2 className="text-lg sm:text-xl mb-4 text-center font-semibold">
+            {userData ? 'Edit Address' : 'Add Address'}
+        </h2>
+        <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+                <label htmlFor="street" className="block text-sm font-medium text-gray-700">
+                    Street Address
+                </label>
+                <input
+                    type="text"
+                    id="street"
+                    name="street"
+                    value={formData.street}
+                    onChange={handleChange}
+                    className="border rounded p-2 w-full text-sm sm:text-base"
+                />
             </div>
-        </div>
+            <div className="mb-4">
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                    City
+                </label>
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    className="border rounded p-2 w-full text-sm sm:text-base"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                    State
+                </label>
+                <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    className="border rounded p-2 w-full text-sm sm:text-base"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="pincode" className="block text-sm font-medium text-gray-700">
+                    Pincode
+                </label>
+                <input
+                    type="text"
+                    id="pincode"
+                    name="pincode"
+                    value={formData.pincode}
+                    onChange={handleChange}
+                    className="border rounded p-2 w-full text-sm sm:text-base"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                    Country
+                </label>
+                <input
+                    type="text"
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    className="border rounded p-2 w-full text-sm sm:text-base"
+                />
+            </div>
+            <div className="flex flex-col sm:flex-row justify-end items-center sm:items-start">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="bg-gray-300 px-4 py-2 rounded mb-2 sm:mb-0 sm:mr-2 text-sm sm:text-base"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded text-sm sm:text-base"
+                >
+                    {userData ? 'Update' : 'Add'} Address
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
     );
 }
 
