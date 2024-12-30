@@ -13,9 +13,9 @@ const Index = () => {
     const token = localStorage.getItem('jwt');
     console.log(token);
     if(token){
-      alert("item add ho gayi hai ");
+      alert("item is added in cart ");
     }else{
-      alert("noobe login first ");
+      alert("please login first ");
     }
     const quantity=1;
     addToCart(productId, quantity); 
